@@ -124,14 +124,15 @@ const Dashboard = () => {
   // data for chart income statics end here
   return (
     <div>
-      <h3 className="mt-4">Dashboard</h3>
-      {/* dash board secondary header where we can show some stats */}
+      <h3 className="mt-4 title">Dashboard</h3>
+      {/* dashboard secondary header where we can show some stats */}
       <div className="d-flex justify-content-between align-items-center gap-3">
         {/* firse div for showing stats */}
         <div className="d-flex  justify-content-between align-items-end  flex-grow-1  rounded-3 ">
           <div>
             {" "}
-            <p>Total</p> <h4 className="mb-0">$1100</h4>
+            <p className="desc">Total</p>{" "}
+            <h4 className="mb-0 sub-title">$1100</h4>
           </div>
           <div className="d-flex flex-column  align-items-end    ">
             {" "}
@@ -139,23 +140,22 @@ const Dashboard = () => {
               <BsArrowDownRight />
               32%
             </h6>
-            <p className=" mb-0"> Compare To April 2023</p>
+            <p className=" mb-0 desc"> Compare To April 2023</p>
           </div>
         </div>
 
         {/* second div for showing stats */}
         <div className="d-flex  justify-content-between align-items-end  flex-grow-1  rounded-3 ">
           <div>
-            {" "}
-            <p>Total</p> <h4 className="mb-0">$1100</h4>
+            <p className="desc">Total</p>{" "}
+            <h4 className="mb-0 sub-title">$1100</h4>
           </div>
           <div className="d-flex flex-column  align-items-end ">
-            {" "}
             <h6 className="red">
               <BsArrowDownRight />
               32%
             </h6>
-            <p className=" mb-0"> Compare To April 2023</p>
+            <p className=" mb-0 desc"> Compare To April 2023</p>
           </div>
         </div>
 
@@ -163,7 +163,8 @@ const Dashboard = () => {
         <div className="d-flex  justify-content-between align-items-end flex-grow-1  rounded-3 ">
           <div>
             {" "}
-            <p>Total</p> <h4 className="mb-0">$1100</h4>
+            <p className="desc">Total</p>{" "}
+            <h4 className="mb-0 sub-title">$1100</h4>
           </div>
           <div className="d-flex flex-column  align-items-end ">
             {" "}
@@ -171,22 +172,22 @@ const Dashboard = () => {
               <BsArrowDownRight />
               32%
             </h6>
-            <p className=" mb-0"> Compare To April 2023</p>
+            <p className=" mb-0 desc"> Compare To April 2023</p>
           </div>
         </div>
       </div>
-      {/* dash board secondary header where we  can show some stats end here */}
+      {/* dashboard secondary header where we  can show some stats end here */}
 
-      {/* chart section for showing income statics */}
+      {/* chart-section for showing income statics */}
       <div className="mt-4">
-        <h3 className="mb-4">Income Statics</h3>
+        <h3 className="mb-5">Income Statics</h3>
         <Column {...config} />
       </div>
-      {/* chart section for showing income statics end here */}
+      {/* chart-section for showing income statics end here */}
 
       {/* table for showing recent orders */}
       <div className="mt-4">
-        <h3 className="mb-4">
+        <h3 className="mb-5">
           Recent Orders <BsArrowUpRight className="green fs-4 " />
         </h3>
         <div>
@@ -198,14 +199,6 @@ const Dashboard = () => {
         </div>
       </div>
       {/* table for showing recent orders end here */}
-
-      {/* <div className="mt-4">
-        <h3 className="mb-4">Recent Reviews</h3>
-        <div className="d-flex  ">
-          <div></div>
-          <div></div>
-        </div>
-      </div> */}
     </div>
   );
 };

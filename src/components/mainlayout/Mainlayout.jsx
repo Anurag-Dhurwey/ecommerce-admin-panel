@@ -25,7 +25,7 @@ import { Layout, Menu, Button, theme } from "antd";
 
 const { Header, Sider, Content } = Layout;
 
-import { Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -119,12 +119,12 @@ const MainLayout = () => {
               label: "Orders",
             },
             {
-              key: "blog",
+              key: "blogs",
               icon: <FaBlogger className="fs-4" />,
               label: "Blogs",
               children: [
                 {
-                  key: "blogs",
+                  key: "blog",
                   icon: <ImBlog className="fs-4" />,
                   label: "Add Blog",
                 },
@@ -179,14 +179,14 @@ const MainLayout = () => {
             }}
           />
           {/* header right side */}
-          <div className="d-flex gap-4 align-items-center">
+          <div className="d-flex gap-4 align-items-center px-3 ">
             <div className="position-relative ">
               <IoIosNotifications className="fs-4" />
               <span className="badge bg-warning rounded-circle p-1 position-absolute ">
                 3
               </span>
             </div>
-            <div className="d-flex gap-3 align-items-center">
+            <div className="d-flex gap-3 mx-2 align-items-center dropdown">
               <div>
                 <img
                   height={32}
@@ -195,9 +195,34 @@ const MainLayout = () => {
                   alt=""
                 />
               </div>
-              <div>
+              <div
+                role="button"
+                id="dropdownMenuLink"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 <h5 className="mb-0">Vishal</h5>
                 <p className="mb-0">vishalpatel@gmail.com</p>
+              </div>
+              <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li>
+                  <Link
+                    className="dropdown-item py-2 mb-0  "
+                    style={{ height: "auto", lineHeight: "20px" }}
+                    to=""
+                  >
+                    View Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="dropdown-item py-1 mb-0"
+                    style={{ height: "auto", lineHeight: "20px" }}
+                    to=""
+                  >
+                    Sigout
+                  </Link>
+                </li>
               </div>
             </div>
           </div>

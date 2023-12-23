@@ -1,8 +1,10 @@
 import { useState } from "react";
-import "./addblog.css";
-import CustomInput from "../../../components/custominput/CustomInput";
+import CustomInput from "../../../../components/custominput/CustomInput";
+import "./addproduct.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+
+// upload image section code
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 const { Dragger } = Upload;
@@ -27,19 +29,40 @@ const props = {
     console.log("Dropped files", e.dataTransfer.files);
   },
 };
+// upload image section code end here
 
-const Addblog = () => {
+const Addproduct = () => {
   const [desc, setDesc] = useState("");
   const handleDesc = (value) => {
     setDesc(value);
   };
-
   return (
     <div>
-      <h3 className="mb-4 title">Add Blog</h3>
-
-      <div className="">
+      <h3 className="mb-4 title">Add Product</h3>
+      <div>
         <form action="">
+          <CustomInput type="text" label="Enter Product Title" />
+          <div className="mb-3">
+            {" "}
+            <ReactQuill
+              theme="snow"
+              value={desc}
+              onChange={(evt) => {
+                handleDesc(evt);
+              }}
+            />
+          </div>
+          <CustomInput type="number" label="Enter Product Price" />
+          <select name="" className="form-control py-3 mb-3 " id="">
+            <option value="">Select Brand</option>
+          </select>
+          <select name="" className="form-control py-3 mb-3 " id="">
+            <option value="">Select Color</option>
+          </select>
+          <select name="" className="form-control py-3 mb-3 " id="">
+            <option value="">Select Category</option>
+          </select>
+          <CustomInput type="number" label="Enter Product Quantity" />
           <Dragger {...props}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
@@ -52,24 +75,11 @@ const Addblog = () => {
               uploading company data or other banned files.
             </p>
           </Dragger>
-          <div className="mt-3">
-            <CustomInput type="text" label="Enter blog Title" />
-          </div>
-          <select name="" className="form-control py-3 mb-3 " id="">
-            <option value="">Select Blog Category</option>
-          </select>
-          <ReactQuill
-            theme="snow"
-            value={desc}
-            onChange={(evt) => {
-              handleDesc(evt);
-            }}
-          />
           <button
             className="btn btn-success border-0  rounded-3 my-4"
             type="submit"
           >
-            Add Blog
+            Add Product
           </button>
         </form>
       </div>
@@ -77,4 +87,4 @@ const Addblog = () => {
   );
 };
 
-export default Addblog;
+export default Addproduct;
