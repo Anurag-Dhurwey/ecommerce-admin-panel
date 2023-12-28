@@ -27,17 +27,12 @@ import Header from "./components/header/Header";
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/reset-password" element={<Resetpassword />} />
-        <Route path="/forgot-password" element={<Forgotpassword />} />
-      </Routes>
       <div className="App">
-        <div>
-          <Header />
-        </div>
         <Routes>
           {/* <Route path="/feed" element={<Feed />} /> */}
+          <Route path="/" element={<Login />} />
+          <Route path="/reset-password" element={<Resetpassword />} />
+          <Route path="/forgot-password" element={<Forgotpassword />} />
 
           <Route path="/admin" element={<Mainlayout />}>
             <Route index element={<Dashboard />} />

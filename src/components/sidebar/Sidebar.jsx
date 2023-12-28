@@ -116,7 +116,8 @@ const Sidebar = () => {
           setActive("enquiries");
         }}
         to="enquiries"
-        className="menu"
+        style={{ marginBottom: "5rem" }}
+        className="menu  "
       >
         <div
           className={active === "enquiries" ? "menuItem active" : "menuItem"}
