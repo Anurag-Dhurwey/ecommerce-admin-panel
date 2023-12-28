@@ -1,76 +1,17 @@
-.trigger {
-  padding: 0 24px;
-  font-size: 18px;
-  line-height: 64px;
-  cursor: pointer;
-  transition: color 0.3s;
+.Mainlayout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
-.trigger:hover {
-  color: #1890ff;
-}
-
-.ant-layout {
-  min-height: 100vh;
+@media screen and (max-width: 1200px) {
+  .MainDash {
+    justify-content: flex-start;
+    margin-top: 2rem;
+  }
 }
 
-.ant-layout-sider {
-  flex: 0 0 250px !important;
-  max-width: 250px !important;
-  min-width: 250px !important;
-  width: 250px !important;
-}
-.ant-layout-sider-collapsed {
-  flex: 0 0 80px !important;
-  max-width: 80px !important;
-  min-width: 80px !important;
-  width: 80px !important;
-}
-.sm-logo {
-  display: none;
-}
-
-.ant-layout-sider-collapsed .sm-logo {
-  display: block;
-}
-
-.ant-layout-sider-collapsed .lg-logo {
-  display: none;
-}
-
-.logo {
-  background-color: #ffd333;
-  height: 64px;
-  /* background: rgba(255, 255, 255, 0.2); */
-}
-
-main {
-  height: 85vh;
-
-  overflow-y: scroll;
-  background-color: transparent !important;
-}
-main::-webkit-scrollbar {
-  width: 0px;
-}
-.logo {
-  background-color: #ffd333;
-}
-
-.ant-menu-title-content {
-  font-size: 1rem;
-}
-
-.ant-layout-header h5 {
-  line-height: 20px;
-  font-size: 0.875rem;
-}
-
-.ant-layout-header p {
-  line-height: 20px;
-  font-size: 0.813rem;
-}
-
-.ant-layout-header div .badge {
-  top: 16px;
-  right: -6px;
+@media screen and (max-width: 768px) {
+  .MainDash {
+    align-items: center;
+  }
 }

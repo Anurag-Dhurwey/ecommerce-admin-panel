@@ -28,7 +28,11 @@ for (let i = 0; i < 46; i++) {
 }
 const Brandlist = () => {
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "5rem",
+      }}
+    >
       <h3 className="mb-4 title">Brands</h3>
       <div>
         {" "}

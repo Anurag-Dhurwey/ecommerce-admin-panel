@@ -3,7 +3,11 @@ import "./addblogcategory.css";
 
 const AddblogCategory = () => {
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "5rem",
+      }}
+    >
       <h3 className="mb-4 title">Add Blog Category</h3>
       <div>
         <form action="">

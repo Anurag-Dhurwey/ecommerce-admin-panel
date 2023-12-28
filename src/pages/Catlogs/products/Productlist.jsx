@@ -30,7 +30,11 @@ for (let i = 0; i < 46; i++) {
 }
 const Productlist = () => {
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "5rem",
+      }}
+    >
       <h3 className="mb-4 title">Products</h3>
       <div>
         {" "}

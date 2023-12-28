@@ -37,7 +37,11 @@ const Addproduct = () => {
     setDesc(value);
   };
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "5rem",
+      }}
+    >
       <h3 className="mb-4 title">Add Product</h3>
       <div>
         <form action="">
@@ -53,6 +57,7 @@ const Addproduct = () => {
             />
           </div>
           <CustomInput type="number" label="Enter Product Price" />
+          <CustomInput type="number" label="Enter Product Local Price" />
           <select name="" className="form-control py-3 mb-3 " id="">
             <option value="">Select Brand</option>
           </select>

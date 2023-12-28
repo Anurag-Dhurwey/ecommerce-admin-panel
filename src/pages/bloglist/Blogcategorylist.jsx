@@ -28,7 +28,11 @@ for (let i = 0; i < 46; i++) {
 }
 const Blogcategorylist = () => {
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "5rem",
+      }}
+    >
       <h3 className="mb-4 title">Blog Categories List</h3>
       <div>
         {" "}

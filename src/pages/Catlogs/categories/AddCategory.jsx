@@ -2,7 +2,11 @@ import CustomInput from "../../../components/custominput/CustomInput";
 
 const AddCategory = () => {
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "5rem",
+      }}
+    >
       <h3 className="mb-4 title">Add Category</h3>
       <div>
         <form action="">

@@ -29,6 +29,11 @@ for (let i = 0; i < 46; i++) {
 const Colorlist = () => {
   return (
     <div>
+      {" "}
+      style=
+      {{
+        marginTop: "5rem",
+      }}
       <h3 className="mb-4 title">Colors</h3>
       <div>
         {" "}
