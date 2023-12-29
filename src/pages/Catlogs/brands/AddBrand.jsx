@@ -2,7 +2,11 @@ import CustomInput from "../../../components/custominput/CustomInput";
 
 const AddBrand = () => {
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "5rem",
+      }}
+    >
       <h3 className="mb-4 title">Add Brand</h3>
       <div>
         <form action="">

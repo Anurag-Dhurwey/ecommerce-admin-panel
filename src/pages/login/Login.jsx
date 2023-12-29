@@ -9,7 +9,7 @@ const Login = () => {
       <br />
       <br />
 
-      <div className="my-5 w-25  bg-white  rounded-3  mx-auto p-3 ">
+      <div className="my-5 w-25  bg-white  rounded-3  mx-auto p-5 ">
         <h3 className=" text-center title ">Login</h3>
         <p className=" text-center ">Login to your account to continue.</p>
         <form>

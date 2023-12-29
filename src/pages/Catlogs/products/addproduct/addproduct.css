@@ -1,0 +1,5 @@
+.addproduct {
+  overflow: auto;
+  height: 100%;
+  transition: all 300ms ease;
+}

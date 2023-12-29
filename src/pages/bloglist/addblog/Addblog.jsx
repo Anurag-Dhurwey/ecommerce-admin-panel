@@ -35,7 +35,11 @@ const Addblog = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        marginTop: "5rem",
+      }}
+    >
       <h3 className="mb-4 title">Add Blog</h3>
 
       <div className="">
