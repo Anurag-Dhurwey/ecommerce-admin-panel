@@ -42,19 +42,19 @@ const Addproduct = () => {
     price: "",
     local_price: "",
     head_desc: "",
-    sub_desc: [],
-    meta_data: [{ key: "", value: "" }],
+    sub_desc: [{ key: "", value: "" }],
+    meta_data: [],
     category: { primary: "", secondry: "", other: false },
     sizes: [],
     colors: [],
     tags: [],
     policy: {
-      exchange: false,
-      return_or_refund: false,
+      exchange: { status: false, expiry: 0 },
+      return_or_refund: { status: false, expiry: 0 },
       description: "",
       rules: [],
     },
-    terms_and_conditions:[]
+    terms_and_conditions: [],
   });
 
   function onSub_desc_Change(e, index) {
@@ -184,23 +184,24 @@ const Addproduct = () => {
     }));
   }
 
-
   function onPolicy_Rule_Change(e, index) {
     const updated_rules = form.policy.rules.map((item, i) => {
       if (i === index) {
-      return e.target.value;
+        return e.target.value;
       } else {
         return item;
       }
     });
-    setForm((pre) => ({ ...pre, policy: {...pre.policy,rules:updated_rules} }));
+    setForm((pre) => ({
+      ...pre,
+      policy: { ...pre.policy, rules: updated_rules },
+    }));
   }
-
 
   function addPolicy_Rule() {
     setForm((pre) => ({
       ...pre,
-      policy: {...pre.policy,rules:[...pre.policy.rules,""]},
+      policy: { ...pre.policy, rules: [...pre.policy.rules, ""] },
     }));
   }
   function removePolicy_Rule(i) {
@@ -208,16 +209,14 @@ const Addproduct = () => {
     copy.splice(i, 1);
     setForm((pre) => ({
       ...pre,
-      policy: {...pre.policy,rules:copy},
+      policy: { ...pre.policy, rules: copy },
     }));
   }
-
-
 
   function onTerms_and_Conditions_Change(e, index) {
     const updated_t_c = form.terms_and_conditions.map((item, i) => {
       if (i === index) {
-      return e.target.value;
+        return e.target.value;
       } else {
         return item;
       }
@@ -225,11 +224,10 @@ const Addproduct = () => {
     setForm((pre) => ({ ...pre, terms_and_conditions: updated_t_c }));
   }
 
-
   function addTerms_Conditions() {
     setForm((pre) => ({
       ...pre,
-      terms_and_conditions: [...pre.terms_and_conditions,""]
+      terms_and_conditions: [...pre.terms_and_conditions, ""],
     }));
   }
   function removeTerms_Conditions(i) {
@@ -237,11 +235,9 @@ const Addproduct = () => {
     copy.splice(i, 1);
     setForm((pre) => ({
       ...pre,
-     terms_and_conditions:copy
+      terms_and_conditions: copy,
     }));
   }
-
-
 
   useEffect(() => {
     console.log(form.sub_desc);
@@ -253,38 +249,44 @@ const Addproduct = () => {
         marginTop: "1rem",
       }}
     >
-      <h3 className="mb-4 title">Add Product</h3>
+      {/* <h3 className="mb-4 title">Add Product</h3> */}
       <div className="px-2">
-        <form onSubmit={(e) => e.preventDefault()}>
-          <CustomInput
-            name="title"
-            value={form.value}
-            setForm={setForm}
-            type="text"
-            id=""
-            className=""
-            label="Enter Product Title"
-          />
-          <span className="d-flex w-100 gap-5">
+        <form onSubmit={(e) => e.preventDefault()} className="form">
+          <div>
+            <h5>Title</h5>
             <CustomInput
-              name="price"
-              value={form.price}
+              name="title"
+              value={form.value}
               setForm={setForm}
+              type="text"
               id=""
               className=""
-              type="number"
-              label="Enter Product Price"
+              label="Enter Product Title"
             />
-            <CustomInput
-              name="local_price"
-              value={form.local_price}
-              setForm={setForm}
-              id=""
-              className=""
-              type="number"
-              label="Enter Product Local Price"
-            />
-          </span>
+          </div>
+          <div>
+            <h5>Price</h5>
+            <span className="d-flex w-100 gap-5">
+              <CustomInput
+                name="price"
+                value={form.price}
+                setForm={setForm}
+                id=""
+                className=""
+                type="number"
+                label="Enter Product Price"
+              />
+              <CustomInput
+                name="local_price"
+                value={form.local_price}
+                setForm={setForm}
+                id=""
+                className=""
+                type="number"
+                label="Enter Product Local Price"
+              />
+            </span>
+          </div>
           {/* <div className="mb-3">
             {" "}
             <ReactQuill
@@ -295,19 +297,20 @@ const Addproduct = () => {
               }}
             />
           </div> */}
-          <CustomInput
-            name="head_desc"
-            value={form.head_desc}
-            setForm={setForm}
-            type="textarea"
-            id=""
-            className=""
-            label="Deascription"
-          />
 
           <div>
-            {form.sub_desc.length ? (
-              <div className="table">
+            <h5>Description</h5>
+            <div className="d-flex w-100 justifu-content-center gap-5">
+              <CustomInput
+                name="head_desc"
+                value={form.head_desc}
+                setForm={setForm}
+                type="textarea"
+                id=""
+                className=""
+                label="Deascription"
+              />
+              <div className="w-50">
                 {form.sub_desc?.map(({ key, value }, i) => {
                   return (
                     <span key={i} className="d-flex gap-2">
@@ -329,307 +332,380 @@ const Addproduct = () => {
                     </span>
                   );
                 })}
+
+                {form.sub_desc.length ? (
+                  <button onClick={() => addSub_desc()}>more</button>
+                ) : (
+                  <button className="w-fit h-fit" onClick={() => addSub_desc()}>
+                    would you like to describe using table
+                  </button>
+                )}
               </div>
-            ) : (
-              <button onClick={() => addSub_desc()}>
-                would you like to describe using table
-              </button>
-            )}
-            {form.sub_desc.length ? (
-              <button className="m-2" onClick={() => addSub_desc()}>
-                add
-              </button>
-            ) : null}
+            </div>
           </div>
 
-          {/* metadata form  */}
-          <div>
-            <h5>Meta data</h5>
-            {form.meta_data.length ? (
-              <div className="table">
-                {form.meta_data?.map(({ key, value }, i) => {
-                  return (
-                    <span key={i} className="d-flex gap-2">
-                      <input
-                        name={`key_${i}`}
-                        onChange={(e) => onMeta_data_Change(e, i)}
-                        placeholder="key"
-                        type="text"
-                        value={key}
-                      />
-                      <input
-                        name={`value_${i}`}
-                        onChange={(e) => onMeta_data_Change(e, i)}
-                        placeholder="value"
-                        type="text"
-                        value={value}
-                      />
-                      <button onClick={() => removeMeta_data(i)}>delete</button>
-                    </span>
-                  );
-                })}
+          <div className="form_row">
+            {/* metadata form  */}
+            <div>
+              <h5>Meta data</h5>
+              <div>
+                {form.meta_data.length ? (
+                  <div className="table">
+                    {form.meta_data?.map(({ key, value }, i) => {
+                      return (
+                        <span key={i} className="d-flex gap-2">
+                          <input
+                            name={`key_${i}`}
+                            onChange={(e) => onMeta_data_Change(e, i)}
+                            placeholder="key"
+                            type="text"
+                            value={key}
+                          />
+                          <input
+                            name={`value_${i}`}
+                            onChange={(e) => onMeta_data_Change(e, i)}
+                            placeholder="value"
+                            type="text"
+                            value={value}
+                          />
+                          <button onClick={() => removeMeta_data(i)}>
+                            delete
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <button onClick={() => addMeta_data()}>
+                    would you like to add meta data
+                  </button>
+                )}
+                {form.meta_data.length ? (
+                  <button onClick={() => addMeta_data()}>more</button>
+                ) : null}
               </div>
-            ) : (
-              <button onClick={() => addMeta_data()}>
-                would you like to add meta data
-              </button>
-            )}
-            {form.meta_data.length ? (
-              <button className="m-2" onClick={() => addMeta_data()}>
-                add
-              </button>
-            ) : null}
+            </div>
+            <div>
+              <h5>Category</h5>
+              <div>
+                {!form.category.other ? (
+                  <select
+                    name="category_primary"
+                    id="category_primary"
+                    onChange={(e) => onCategoryChange(e)}
+                  >
+                    {[
+                      "select",
+                      "ctr_1",
+                      "ctr_2",
+                      "ctr_3",
+                      "ctr_1",
+                      "ctr_2",
+                      "ctr_3",
+                      "other",
+                    ].map((ctr, i) => {
+                      return (
+                        <option key={i} value={ctr}>
+                          {ctr}
+                        </option>
+                      );
+                    })}
+                  </select>
+                ) : (
+                  <span>
+                    <input
+                      placeholder="category-primary"
+                      type="text"
+                      className="form-control"
+                    />
+                    <button
+                      onClick={() =>
+                        setForm((pre) => ({
+                          ...pre,
+                          category: { ...pre.category, other: false },
+                        }))
+                      }
+                    >
+                      remove
+                    </button>
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h5>Category</h5>
-            {!form.category.other ? (
-              <select
-                name="category_primary"
-                id="category_primary"
-                onChange={(e) => onCategoryChange(e)}
-              >
-                {[
-                  "select",
-                  "ctr_1",
-                  "ctr_2",
-                  "ctr_3",
-                  "ctr_1",
-                  "ctr_2",
-                  "ctr_3",
-                  "other",
-                ].map((ctr, i) => {
-                  return (
-                    <option key={i} value={ctr}>
-                      {ctr}
-                    </option>
-                  );
-                })}
-              </select>
-            ) : (
-              <span>
+          <div className="form_row">
+            {/* sizes form */}
+            <div>
+              <h5>Add size</h5>
+              <div>
+                {form.sizes.length ? (
+                  <div className="table">
+                    {form.sizes?.map(({ qty, size }, i) => {
+                      return (
+                        <span key={i} className="d-flex gap-2">
+                          <input
+                            name={`qty_${i}`}
+                            onChange={(e) => onSize_Change(e, i)}
+                            placeholder="key"
+                            type="number"
+                            value={qty}
+                            min={1}
+                          />
+                          <input
+                            name={`size_${i}`}
+                            onChange={(e) => onSize_Change(e, i)}
+                            placeholder="value"
+                            type="text"
+                            value={size}
+                          />
+                          <button onClick={() => removeSize(i)}>delete</button>
+                        </span>
+                      );
+                    })}
+                    <button onClick={() => addSize()}>more</button>
+                  </div>
+                ) : (
+                  <button onClick={() => addSize()}>
+                    would you like to add meta data
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* colors form */}
+            <div>
+              <h5>Add Colors</h5>
+              <div>
+                {form.colors.length ? (
+                  <div className="table">
+                    {form.colors?.map(({ qty, color }, i) => {
+                      return (
+                        <span key={i} className="d-flex gap-2">
+                          <input
+                            name={`qty_${i}`}
+                            onChange={(e) => onColor_Change(e, i)}
+                            placeholder="key"
+                            type="number"
+                            value={qty}
+                            min={1}
+                          />
+                          <input
+                            style={{ minWidth: "15px" }}
+                            type="color"
+                            name={`color_${i}`}
+                            onChange={(e) => onColor_Change(e, i)}
+                            value={color}
+                          />
+                          <input
+                            name={`color_${i}`}
+                            onChange={(e) => onColor_Change(e, i)}
+                            placeholder="value"
+                            type="text"
+                            value={color}
+                          />
+                          <button onClick={() => removeColor(i)}>delete</button>
+                        </span>
+                      );
+                    })}
+                    <button onClick={() => addColor()}>more</button>
+                  </div>
+                ) : (
+                  <button onClick={() => addColor()}>
+                    would you like to add meta data
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="form_product_policy">
+            <h5>Policy</h5>
+            <div>
+              <div style={{ alignItems: "center" }}>
+                <label htmlFor="exchange">
+                  {" "}
+                  Exchange-available : check if yes{" "}
+                </label>
                 <input
-                  placeholder="category-primary"
-                  type="text"
-                  className="form-control"
-                />
-                <button
-                  onClick={() =>
+                  onChange={() =>
                     setForm((pre) => ({
                       ...pre,
-                      category: { ...pre.category, other: false },
+                      policy: {
+                        ...pre.policy,
+                        exchange: {
+                          ...pre.policy.exchange,
+                          status: !pre.policy.exchange.status,
+                        },
+                      },
                     }))
                   }
-                >
-                  remove
-                </button>
-              </span>
-            )}
-          </div>
+                  type="checkbox"
+                  name="exchange"
+                  id="exchange"
+                  checked={form.policy.exchange.status}
+                />
 
-          {/* sizes form */}
-          <div>
-            <h5>Add size</h5>
-            {form.sizes.length ? (
-              <div className="table">
-                {form.sizes?.map(({ qty, size }, i) => {
-                  return (
-                    <span key={i} className="d-flex gap-2">
-                      <input
-                        name={`qty_${i}`}
-                        onChange={(e) => onSize_Change(e, i)}
-                        placeholder="key"
-                        type="number"
-                        value={qty}
-                        min={1}
-                      />
-                      <input
-                        name={`size_${i}`}
-                        onChange={(e) => onSize_Change(e, i)}
-                        placeholder="value"
-                        type="text"
-                        value={size}
-                      />
-                      <button onClick={() => removeSize(i)}>delete</button>
-                    </span>
-                  );
-                })}
+                {form.policy.exchange.status ? (
+                  <>
+                    <label htmlFor="exchange_expiry_days">Expiry : </label>
+                    <input
+                      onChange={(e) =>
+                        setForm((pre) => ({
+                          ...pre,
+                          policy: {
+                            ...pre.policy,
+                            exchange: {
+                              ...pre.policy.exchange,
+                              expiry: e.target.value,
+                            },
+                          },
+                        }))
+                      }
+                      min={0}
+                      max={30}
+                      value={form.policy.exchange.expiry}
+                      type="number"
+                      name="exchange_expiry_days"
+                      id="exchange_expiry_days"
+                    />
+                  </>
+                ) : null}
               </div>
-            ) : (
-              <button onClick={() => addSize()}>
-                would you like to add meta data
-              </button>
-            )}
-            {form.sizes.length ? (
-              <button className="m-2" onClick={() => addSize()}>
-                add
-              </button>
-            ) : null}
-          </div>
+              <div style={{ alignItems: "center" }}>
+                <label htmlFor="return_or_refund">
+                  {" "}
+                  Return and Refund : check if yes{" "}
+                </label>
+                <input
+                  onChange={() =>
+                    setForm((pre) => ({
+                      ...pre,
+                      policy: {
+                        ...pre.policy,
+                        return_or_refund: {
+                          ...pre.policy.return_or_refund,
+                          status: !pre.policy.return_or_refund.status,
+                        },
+                      },
+                    }))
+                  }
+                  type="checkbox"
+                  name="return_or_refund"
+                  id="return_or_refund"
+                  checked={form.policy.return_or_refund.status}
+                />
 
-          {/* colors form */}
-          <div>
-            <h5>Add Colors</h5>
-            {form.colors.length ? (
-              <div className="table">
-                {form.colors?.map(({ qty, color }, i) => {
-                  return (
-                    <span key={i} className="d-flex gap-2">
-                      <input
-                        name={`qty_${i}`}
-                        onChange={(e) => onColor_Change(e, i)}
-                        placeholder="key"
-                        type="number"
-                        value={qty}
-                        min={1}
-                      />
-                      <input
-                        type="color"
-                        name={`color_${i}`}
-                        onChange={(e) => onColor_Change(e, i)}
-                        value={color}
-                      />
-                      <input
-                        name={`color_${i}`}
-                        onChange={(e) => onColor_Change(e, i)}
-                        placeholder="value"
-                        type="text"
-                        value={color}
-                      />
-                      <button onClick={() => removeColor(i)}>delete</button>
-                    </span>
-                  );
-                })}
+                {form.policy.return_or_refund.status ? (
+                  <>
+                    <label htmlFor="return_or_refund_expiry_days">
+                      Expiry :
+                    </label>
+                    <input
+                      onChange={(e) =>
+                        setForm((pre) => ({
+                          ...pre,
+                          policy: {
+                            ...pre.policy,
+                            return_or_refund: {
+                              ...pre.policy.return_or_refund,
+                              expiry: e.target.value,
+                            },
+                          },
+                        }))
+                      }
+                      value={form.policy.return_or_refund.expiry}
+                      min={0}
+                      max={30}
+                      type="number"
+                      name="return_or_refund_expiry_days"
+                      id="return_or_refund_expiry_days"
+                    />
+                  </>
+                ) : null}
               </div>
-            ) : (
-              <button onClick={() => addColor()}>
-                would you like to add meta data
-              </button>
-            )}
-            {form.colors.length ? (
-              <button className="m-2" onClick={() => addColor()}>
-                add
-              </button>
-            ) : null}
-          </div>
 
-          <div>
-            <h5>Policy</h5>
-            <label htmlFor="exchange">
-              {" "}
-              Exchange-available : check if yes{" "}
-            </label>
-            <input
-              onChange={() =>
-                setForm((pre) => ({
-                  ...pre,
-                  policy: { ...pre.policy, exchange: !pre.policy.exchange },
-                }))
-              }
-              type="checkbox"
-              name="exchange"
-              id="exchange"
-              checked={form.policy.exchange}
-            />
-            <label htmlFor="return_or_refund">
-              {" "}
-              Return and Refund : check if yes{" "}
-            </label>
-            <input
-              onChange={() =>
-                setForm((pre) => ({
-                  ...pre,
-                  policy: {
-                    ...pre.policy,
-                    return_or_refund: !pre.policy.return_or_refund,
-                  },
-                }))
-              }
-              type="checkbox"
-              name="return_or_refund"
-              id="return_or_refund"
-              checked={form.policy.return_or_refund}
-            />
-            <label htmlFor="policy_desc"> Description : </label>
-            <input
-              onChange={(e) =>
-                setForm((pre) => ({
-                  ...pre,
-                  policy: { ...pre.policy, description: e.target.value },
-                }))
-              }
-              type="text"
-              name="policy_desc"
-              id="policy_desc"
-              value={form.policy.description}
-            />
-
-            <div>
-            <h5>Policy Rules</h5>
-            {form.policy.rules.length ? (
-              <div className="table">
-                {form.policy.rules?.map((rule, i) => {
-                  return (
-                    <span key={i} className="d-flex gap-2">
-                      <input
-                        name={`qty_${i}`}
-                        onChange={(e) => onPolicy_Rule_Change(e, i)}
-                        placeholder={`rule ${i+1}`}
-                        type="text"
-                        value={rule}
-                        min={1}
-                      />
-                      <button onClick={() => removePolicy_Rule(i)}>delete</button>
-                    </span>
-                  );
-                })}
+              <div className="form_product_policy_rules">
+                <label>Rules</label>
+                {form.policy.rules.length ? (
+                  <div className="gap-1">
+                    {form.policy.rules?.map((rule, i) => {
+                      return (
+                        <span key={i} className="d-flex gap-2">
+                          <input
+                            name={`qty_${i}`}
+                            onChange={(e) => onPolicy_Rule_Change(e, i)}
+                            placeholder={`rule ${i + 1}`}
+                            type="text"
+                            value={rule}
+                            min={1}
+                          />
+                          <button onClick={() => removePolicy_Rule(i)}>
+                            delete
+                          </button>
+                        </span>
+                      );
+                    })}
+                    <button className="" onClick={() => addPolicy_Rule()}>
+                      more
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={() => addPolicy_Rule()}>
+                    would you like to add policy of this product
+                  </button>
+                )}
               </div>
-            ) : (
-              <button onClick={() => addPolicy_Rule()}>
-                would you like to add policy of this product
-              </button>
-            )}
-            {form.terms_and_conditions.length ? (
-              <button className="m-2" onClick={() => addPolicy_Rule()}>
-                add
-              </button>
-            ) : null}
+              <div>
+                <label htmlFor="policy_desc"> Description : </label>
+                <input
+                  onChange={(e) =>
+                    setForm((pre) => ({
+                      ...pre,
+                      policy: { ...pre.policy, description: e.target.value },
+                    }))
+                  }
+                  type="text"
+                  name="policy_desc"
+                  id="policy_desc"
+                  value={form.policy.description}
+                />
+              </div>
             </div>
+            {/* <div>
+       
+            </div> */}
           </div>
-
-
-
           <div>
             <h5> Terms and Conditions</h5>
-            {form.terms_and_conditions.length ? (
-              <div className="table">
-                {form.terms_and_conditions?.map((rule, i) => {
-                  return (
-                    <span key={i} className="d-flex gap-2">
-                      <input
-                        name={`qty_${i}`}
-                        onChange={(e) => onTerms_and_Conditions_Change(e, i)}
-                        placeholder={`T&C ${i+1}`}
-                        type="text"
-                        value={rule}
-                        min={1}
-                      />
-                      <button onClick={() => removeTerms_Conditions(i)}>delete</button>
-                    </span>
-                  );
-                })}
-              </div>
-            ) : (
-              <button onClick={() => addTerms_Conditions()}>
-               would you like to add terms and conditions
-              </button>
-            )}
-            {form.terms_and_conditions.length ? (
-              <button className="m-2" onClick={() => addTerms_Conditions()}>
-                add
-              </button>
-            ) : null}
+            <div>
+              {form.terms_and_conditions.length ? (
+                <div className="table">
+                  {form.terms_and_conditions?.map((rule, i) => {
+                    return (
+                      <span key={i} className="d-flex gap-2">
+                        <input
+                          name={`qty_${i}`}
+                          onChange={(e) => onTerms_and_Conditions_Change(e, i)}
+                          placeholder={`T&C ${i + 1}`}
+                          type="text"
+                          value={rule}
+                          min={1}
+                        />
+                        <button onClick={() => removeTerms_Conditions(i)}>
+                          delete
+                        </button>
+                      </span>
+                    );
+                  })}
+                  <button onClick={() => addTerms_Conditions()}>more</button>
+                </div>
+              ) : (
+                <button onClick={() => addTerms_Conditions()}>
+                  would you like to add terms and conditions
+                </button>
+              )}
             </div>
+          </div>
           {/* <select name="" className="form-control py-3 mb-3 " id="">
             <option value="">Select Brand</option>
           </select>

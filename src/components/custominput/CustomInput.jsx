@@ -2,9 +2,9 @@ const CustomInput = (props) => {
   const { name, value, setForm, type, label, id, className } = props;
   if (type === "textarea") {
     return (
-      <div className=" mb-3 mx-1 ">
+      <div className="w-50  ">
         <textarea
-          style={{ maxWidth: "98%" }}
+          style={{ maxWidth: "100%" }}
           className={`form-control ${className}`}
           id={id}
           placeholder={label}
@@ -20,7 +20,7 @@ const CustomInput = (props) => {
   }
   return (
     // <div className="form-floating mb-3 mx-1  ">
-    <div className=" mb-3 mx-1 ">
+    <div className="w-100  ">
       <input
         style={{ maxWidth: "98%" }}
         type={type}
