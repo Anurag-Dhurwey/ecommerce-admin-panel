@@ -67,7 +67,7 @@ body {
 }
 .scrolling {
   overflow-y: scroll;
-  height: 100%;
+  height: 90%;
   transition: all 300ms ease;
   scroll-behavior: smooth;
   scrollbar-width: thin; /* Firefox */

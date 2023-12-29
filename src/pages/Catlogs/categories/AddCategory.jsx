@@ -3,9 +3,10 @@ import CustomInput from "../../../components/custominput/CustomInput";
 const AddCategory = () => {
   return (
     <div
-      style={{
-        marginTop: "5rem",
-      }}
+    style={{
+      overflow:"scroll",
+      marginTop: "1rem",
+    }}
     >
       <h3 className="mb-4 title">Add Category</h3>
       <div>

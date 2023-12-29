@@ -2,13 +2,13 @@ import React from "react";
 import Cards from "../../components/Cards/Cards";
 import "./dashboard.css";
 import Table from "../../components/Table/Table";
-import { Flex } from "antd";
+// import { Flex } from "antd";
 
 const Dashboard = () => {
   return (
     <div
       style={{
-        marginTop: "5rem",
+        marginTop: "1rem"
       }}
       className="MainDash scrolling"
     >

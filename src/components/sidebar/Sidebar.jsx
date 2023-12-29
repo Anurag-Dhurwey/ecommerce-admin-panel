@@ -1,5 +1,5 @@
 import "./Sidebar.css";
-import logo from "../../image/Tranparent_logo_dark.png";
+// import logo from "../../image/Tranparent_logo_dark.png";
 import { AiOutlineDashboard, AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { catlog, blog } from "../../utils/Constants.jsx";
@@ -11,12 +11,12 @@ const Sidebar = () => {
   return (
     <div className="Sidebar">
       {/* Logo */}
-      <div className="logo">
-        {/* <img src={logo} alt="logo" /> */}
+      {/* <div className="logo">
+        <img src={logo} alt="logo" />
         <span>
           Rai <span>Appliances</span>
         </span>
-      </div>
+      </div> */}
       {/* Menu */}
 
       {/* dashboard */}
@@ -56,16 +56,14 @@ const Sidebar = () => {
       {catlog.map((item, index) => {
         return (
           <Link
+            key={index}
             onClick={() => {
               setActive(index);
             }}
             to={item.path}
             className="menu "
           >
-            <div
-              key={index}
-              className={active === index ? "menuItem active" : "menuItem"}
-            >
+            <div className={active === index ? "menuItem active" : "menuItem"}>
               {item.icon}
               <span>{item.name}</span>
             </div>
@@ -75,25 +73,23 @@ const Sidebar = () => {
 
       {/* blog */}
 
-      {blog.map((item, index) => {
+      {/* {blog.map((item, index) => {
         return (
           <Link
+            key={index}
             onClick={() => {
               setActive(index);
             }}
             to={item.path}
             className="menu"
           >
-            <div
-              key={index}
-              className={active === index ? "menuItem active" : "menuItem"}
-            >
+            <div className={active === index ? "menuItem active" : "menuItem"}>
               {item.icon}
               <span>{item.name}</span>
             </div>
           </Link>
         );
-      })}
+      })} */}
 
       {/* orders */}
 

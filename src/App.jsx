@@ -22,7 +22,7 @@ import AddBrand from "./pages/Catlogs/brands/AddBrand";
 import Addproduct from "./pages/Catlogs/products/addproduct/Addproduct";
 // import Header from "./components/header/Header";
 
-import Header from "./components/header/Header";
+// import Header from "./components/header/Header";
 
 function App() {
   return (
