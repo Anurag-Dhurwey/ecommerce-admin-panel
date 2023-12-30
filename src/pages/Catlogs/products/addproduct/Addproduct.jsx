@@ -9,40 +9,14 @@ import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 const { Dragger } = Upload;
 
-// drag and drop upload file code
-const props = {
-  name: "file",
-  multiple: true,
-  action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
-// upload image section code end here
-
 const Addproduct = () => {
-  // const [desc, setDesc] = useState("");
-  // const handleDesc = (value) => {
-  //   setDesc(value);
-  // };
-
   const [form, setForm] = useState({
     title: "",
     price: "",
     local_price: "",
     head_desc: "",
     sub_desc: [{ key: "", value: "" }],
+    images: { primary: [], descriptive: [] },
     meta_data: [],
     category: { primary: "", secondry: "", other: false },
     sizes: [],
@@ -56,6 +30,90 @@ const Addproduct = () => {
     },
     terms_and_conditions: [],
   });
+
+  const config = {
+    headers: {
+      // "Content-Type": "multipart/form-data",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjcyMjZiODU0ZTc2Y2VhODhmNTE0NyIsImlhdCI6MTcwMzk0NzE1OSwiZXhwIjoxNzA0MDMzNTU5fQ.aIowvau_7DS-Ku8IT8-vpEAEOX8TQcV8Qvh5WTUWvVY",
+    },
+  };
+
+  const props = {
+    name: "images",
+    multiple: true,
+    async customRequest(info) {
+      const { file, onSuccess, onError } = info;
+      const formData = new FormData();
+      formData.append("images", file);
+
+      fetch("http://localhost:5000/api/upload", {
+        method: "POST",
+        body: formData,
+        ...config,
+      })
+        .then((response) => {
+          if (response.ok) {
+            onSuccess(response.json()); // Handle server response
+          } else {
+            onError({ message: "Upload failed" });
+          }
+        })
+        .catch(onError);
+    },
+    async onRemove(file) {
+      const res = await file.response;
+      const { asset_id } = res.images[0];
+      if (asset_id) {
+        console.log(asset_id);
+        return fetch(
+          `http://localhost:5000/api/upload/delete-img/${asset_id}`,
+          {
+            method: "DELETE",
+            ...config,
+          }
+        ).then((res) => res.json());
+      } else {
+        return true;
+      }
+    },
+    async onChange(info) {
+      const { status } = info.file;
+      const res = await info.file.response;
+      if (status !== "uploading") {
+        //  any opration
+      }
+      if (status === "done") {
+        const { url, asset_id, public_id } = res.images[0];
+        setForm((pre) => ({
+          ...pre,
+          images: {
+            ...pre.images,
+            primary: [...pre.images.primary, { url, asset_id, public_id }],
+          },
+        }));
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === "removed") {
+        setForm((pre) => {
+          const updated = pre.images.primary.filter((item) => {
+            return item.asset_id != res.images[0].asset_id;
+          });
+          return {
+            ...pre,
+            images: {
+              ...pre.images,
+              primary: updated,
+            },
+          };
+        });
+      } else if (status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    onDrop(e) {
+      console.log("Dropped files", e.dataTransfer.files);
+    },
+  };
 
   function onSub_desc_Change(e, index) {
     const updated_sub_desc = form.sub_desc.map((item, i) => {
@@ -240,7 +298,7 @@ const Addproduct = () => {
   }
 
   useEffect(() => {
-    console.log(form.sub_desc);
+    console.log(form.images);
   }, [form]);
   return (
     <div
@@ -713,7 +771,7 @@ const Addproduct = () => {
                     return (
                       <span key={i} className="d-flex gap-2">
                         <input
-                        className="w-100"
+                          className="w-100"
                           name={`qty_${i}`}
                           onChange={(e) => onTerms_and_Conditions_Change(e, i)}
                           placeholder={`T&C ${i + 1}`}
@@ -746,18 +804,20 @@ const Addproduct = () => {
             <option value="">Select Category</option>
           </select> */}
           {/* <CustomInput type="number" label="Enter Product Quantity" /> */}
-          {/* <Dragger {...props}>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">
-              Support for a single or bulk upload. Strictly prohibited from
-              uploading company data or other banned files.
-            </p>
-          </Dragger> */}
+          <div>
+            <Dragger {...props}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibited from
+                uploading company data or other banned files.
+              </p>
+            </Dragger>
+          </div>
           <button
             className="btn btn-success border-0  rounded-3 my-4"
             type="submit"
@@ -771,3 +831,4 @@ const Addproduct = () => {
 };
 
 export default Addproduct;
+
