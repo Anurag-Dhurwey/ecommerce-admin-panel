@@ -56,16 +56,14 @@ const Sidebar = () => {
       {catlog.map((item, index) => {
         return (
           <Link
+            key={index}
             onClick={() => {
               setActive(index);
             }}
             to={item.path}
             className="menu "
           >
-            <div
-              key={index}
-              className={active === index ? "menuItem active" : "menuItem"}
-            >
+            <div className={active === index ? "menuItem active" : "menuItem"}>
               {item.icon}
               <span>{item.name}</span>
             </div>
@@ -78,16 +76,14 @@ const Sidebar = () => {
       {blog.map((item, index) => {
         return (
           <Link
+            key={index}
             onClick={() => {
               setActive(index);
             }}
             to={item.path}
             className="menu"
           >
-            <div
-              key={index}
-              className={active === index ? "menuItem active" : "menuItem"}
-            >
+            <div className={active === index ? "menuItem active" : "menuItem"}>
               {item.icon}
               <span>{item.name}</span>
             </div>

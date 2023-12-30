@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 const Forgotpassword = () => {
   return (
-    <div className="py-5" style={{ background: "#ffd333", minHeight: "100vh" }}>
+    <div className="py-5" style={{ minHeight: "100vh" }}>
       <br />
       <br />
       <br />
       <br />
 
-      <div className="my-5 w-25  bg-white  rounded-3  mx-auto p-3 ">
+      <div className="my-5 w-25  bg-white  rounded-3  mx-auto upperdiv ">
         <h3 className=" text-center title"> Forgot password </h3>
         <p className=" text-center ">
           Please enter your register email to get reset password link.{" "}
@@ -17,14 +17,14 @@ const Forgotpassword = () => {
         <form>
           <CustomInput type="email" label="Email Address" i_id="email" />
 
-          <botton
+          <button
             className=" fs-5  border-0  px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none"
             style={{ background: "#ffd333" }}
             type="submit"
           >
             {" "}
             Send Reset Link
-          </botton>
+          </button>
         </form>
       </div>
     </div>

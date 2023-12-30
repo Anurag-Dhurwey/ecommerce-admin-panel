@@ -1,0 +1,11 @@
+a {
+  color: black !important;
+}
+.error {
+  color: red;
+  font-size: 0.75rem;
+  /* margin-top: 0.2rem; */
+
+  margin-bottom: 0.2rem;
+  padding-left: 0.5rem;
+}

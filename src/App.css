@@ -57,7 +57,7 @@ body {
 @media screen and (max-width: 1200px) {
   .AppGlass {
     grid-template-columns: 10% auto;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
   }
 }
 @media screen and (max-width: 768px) {
@@ -82,4 +82,16 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background-color: transparent;
+}
+/* .form-floating > .form-control,
+.form-floating > .form-control-plaintext {
+  padding: 0.5rem 1rem !important;
+} */
+.upperdiv {
+  padding: 3rem 3.6rem 3rem 3rem;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-control-plaintext {
+  padding: 0.5rem 0.75rem !important;
 }
