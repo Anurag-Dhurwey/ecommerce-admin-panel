@@ -63,7 +63,7 @@ const Addproduct = () => {
     },
     async onRemove(file) {
       const res = await file.response;
-      const { asset_id } = res.images[0];
+      const { asset_id } = res[0];
       if (asset_id) {
         console.log(asset_id);
         return fetch(
@@ -84,7 +84,7 @@ const Addproduct = () => {
         //  any opration
       }
       if (status === "done") {
-        const { url, asset_id, public_id } = res.images[0];
+        const { url, asset_id, public_id } = res[0];
         setForm((pre) => ({
           ...pre,
           images: {
@@ -96,7 +96,7 @@ const Addproduct = () => {
       } else if (status === "removed") {
         setForm((pre) => {
           const updated = pre.images.primary.filter((item) => {
-            return item.asset_id != res.images[0].asset_id;
+            return item.asset_id != res[0].asset_id;
           });
           return {
             ...pre,
