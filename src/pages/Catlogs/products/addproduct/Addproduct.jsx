@@ -49,8 +49,8 @@ const Addproduct = () => {
     colors: [],
     tags: [],
     policy: {
-      exchange: { status: false, expiry: 0 },
-      return_or_refund: { status: false, expiry: 0 },
+      exchange: { status: false, validity: 0 },
+      return_or_refund: { status: false, validity: 0 },
       description: "",
       rules: [],
     },
@@ -266,7 +266,7 @@ const Addproduct = () => {
           </div>
           <div>
             <h5>Price</h5>
-            <span className="d-flex w-100 gap-5">
+            <span className="d-flex w-50 gap-5">
               <CustomInput
                 name="price"
                 value={form.price}
@@ -438,36 +438,50 @@ const Addproduct = () => {
             {/* sizes form */}
             <div>
               <h5>Add size</h5>
-              <div>
+              <div className="w-100">
                 {form.sizes.length ? (
-                  <div className="table">
+                  <div className="w-100">
                     {form.sizes?.map(({ qty, size }, i) => {
                       return (
-                        <span key={i} className="d-flex gap-2">
-                          <input
-                            name={`qty_${i}`}
-                            onChange={(e) => onSize_Change(e, i)}
-                            placeholder="key"
-                            type="number"
-                            value={qty}
-                            min={1}
-                          />
-                          <input
-                            name={`size_${i}`}
-                            onChange={(e) => onSize_Change(e, i)}
-                            placeholder="value"
-                            type="text"
-                            value={size}
-                          />
+                        <div
+                          key={i}
+                          className="d-flex align-items-end gap-2 w-100"
+                        >
+                          <span>
+                            {i === 0 ? <h6>Quantity </h6> : null}
+                            <input
+                              name={`qty_${i}`}
+                              onChange={(e) => onSize_Change(e, i)}
+                              placeholder="Quantity"
+                              type="number"
+                              value={qty}
+                              min={1}
+                              id={`qty_${i}`}
+                            />
+                          </span>
+                          <span>
+                            {i === 0 ? <h6>Size </h6> : null}
+                            <input
+                              name={`size_${i}`}
+                              id={`size_${i}`}
+                              onChange={(e) => onSize_Change(e, i)}
+                              placeholder="size"
+                              type="text"
+                              value={size}
+                            />
+                          </span>
+
+                          {/* <span> */}
                           <button onClick={() => removeSize(i)}>delete</button>
-                        </span>
+                          {/* </span> */}
+                        </div>
                       );
                     })}
                     <button onClick={() => addSize()}>more</button>
                   </div>
                 ) : (
                   <button onClick={() => addSize()}>
-                    would you like to add meta data
+                    would you like to add Sizes
                   </button>
                 )}
               </div>
@@ -478,41 +492,53 @@ const Addproduct = () => {
               <h5>Add Colors</h5>
               <div>
                 {form.colors.length ? (
-                  <div className="table">
+                  <div>
                     {form.colors?.map(({ qty, color }, i) => {
                       return (
-                        <span key={i} className="d-flex gap-2">
-                          <input
-                            name={`qty_${i}`}
-                            onChange={(e) => onColor_Change(e, i)}
-                            placeholder="key"
-                            type="number"
-                            value={qty}
-                            min={1}
-                          />
-                          <input
-                            style={{ minWidth: "15px" }}
-                            type="color"
+                        <div
+                          key={i}
+                          className="d-flex align-items-end gap-2 w-100"
+                        >
+                          <span>
+                            {i === 0 ? <h6>Quantity</h6> : null}
+                            <input
+                              style={{ height: "fit-content" }}
+                              name={`qty_${i}`}
+                              onChange={(e) => onColor_Change(e, i)}
+                              placeholder="Quantity"
+                              type="number"
+                              value={qty}
+                              min={1}
+                              id={`qty_${i}`}
+                            />
+                          </span>
+                          <span>
+                            {i === 0 ? <h6>Color</h6> : null}
+                            <input
+                              style={{ height: "17px", width: "20px" }}
+                              type="color"
+                              name={`color_${i}`}
+                              onChange={(e) => onColor_Change(e, i)}
+                              value={color}
+                            />
+                          </span>
+                          {/* <input
+                          style={{height:"fit-content"}}
                             name={`color_${i}`}
                             onChange={(e) => onColor_Change(e, i)}
-                            value={color}
-                          />
-                          <input
-                            name={`color_${i}`}
-                            onChange={(e) => onColor_Change(e, i)}
-                            placeholder="value"
+                            placeholder="Color"
                             type="text"
                             value={color}
-                          />
+                          /> */}
                           <button onClick={() => removeColor(i)}>delete</button>
-                        </span>
+                        </div>
                       );
                     })}
                     <button onClick={() => addColor()}>more</button>
                   </div>
                 ) : (
                   <button onClick={() => addColor()}>
-                    would you like to add meta data
+                    would you like to add colors
                   </button>
                 )}
               </div>
@@ -533,7 +559,7 @@ const Addproduct = () => {
                       policy: {
                         ...pre.policy,
                         exchange: {
-                          ...pre.policy.exchange,
+                          validity: 0,
                           status: !pre.policy.exchange.status,
                         },
                       },
@@ -547,8 +573,11 @@ const Addproduct = () => {
 
                 {form.policy.exchange.status ? (
                   <>
-                    <label htmlFor="exchange_expiry_days">Expiry : </label>
+                    <label htmlFor="exchange_validity_days">
+                      validity :(days){" "}
+                    </label>
                     <input
+                      style={{ width: "50px" }}
                       onChange={(e) =>
                         setForm((pre) => ({
                           ...pre,
@@ -556,17 +585,17 @@ const Addproduct = () => {
                             ...pre.policy,
                             exchange: {
                               ...pre.policy.exchange,
-                              expiry: e.target.value,
+                              validity: e.target.value,
                             },
                           },
                         }))
                       }
                       min={0}
                       max={30}
-                      value={form.policy.exchange.expiry}
+                      value={form.policy.exchange.validity}
                       type="number"
-                      name="exchange_expiry_days"
-                      id="exchange_expiry_days"
+                      name="exchange_validity_days"
+                      id="exchange_validity_days"
                     />
                   </>
                 ) : null}
@@ -583,7 +612,7 @@ const Addproduct = () => {
                       policy: {
                         ...pre.policy,
                         return_or_refund: {
-                          ...pre.policy.return_or_refund,
+                          validity: 0,
                           status: !pre.policy.return_or_refund.status,
                         },
                       },
@@ -597,10 +626,11 @@ const Addproduct = () => {
 
                 {form.policy.return_or_refund.status ? (
                   <>
-                    <label htmlFor="return_or_refund_expiry_days">
-                      Expiry :
+                    <label htmlFor="return_or_refund_validity_days">
+                      validity : (days)
                     </label>
                     <input
+                      style={{ width: "50px" }}
                       onChange={(e) =>
                         setForm((pre) => ({
                           ...pre,
@@ -608,30 +638,31 @@ const Addproduct = () => {
                             ...pre.policy,
                             return_or_refund: {
                               ...pre.policy.return_or_refund,
-                              expiry: e.target.value,
+                              validity: e.target.value,
                             },
                           },
                         }))
                       }
-                      value={form.policy.return_or_refund.expiry}
+                      value={form.policy.return_or_refund.validity}
                       min={0}
                       max={30}
                       type="number"
-                      name="return_or_refund_expiry_days"
-                      id="return_or_refund_expiry_days"
+                      name="return_or_refund_validity_days"
+                      id="return_or_refund_validity_days"
                     />
                   </>
                 ) : null}
               </div>
 
-              <div className="form_product_policy_rules">
-                <label>Rules</label>
+              <div className="gap-1">
+                <h6>Rules</h6>
                 {form.policy.rules.length ? (
-                  <div className="gap-1">
+                  <div className="gap-1 w-100">
                     {form.policy.rules?.map((rule, i) => {
                       return (
-                        <span key={i} className="d-flex gap-2">
+                        <span key={i} className="d-flex gap-2 w-100">
                           <input
+                            className="w-100"
                             name={`qty_${i}`}
                             onChange={(e) => onPolicy_Rule_Change(e, i)}
                             placeholder={`rule ${i + 1}`}
@@ -655,25 +686,23 @@ const Addproduct = () => {
                   </button>
                 )}
               </div>
-              <div>
-                <label htmlFor="policy_desc"> Description : </label>
-                <input
+              <div className="gap-1">
+                <h6> Description : </h6>
+                <textarea
                   onChange={(e) =>
                     setForm((pre) => ({
                       ...pre,
                       policy: { ...pre.policy, description: e.target.value },
                     }))
                   }
-                  type="text"
                   name="policy_desc"
                   id="policy_desc"
                   value={form.policy.description}
-                />
+                  className="w-100"
+                  rows="2"
+                ></textarea>
               </div>
             </div>
-            {/* <div>
-       
-            </div> */}
           </div>
           <div>
             <h5> Terms and Conditions</h5>
@@ -684,6 +713,7 @@ const Addproduct = () => {
                     return (
                       <span key={i} className="d-flex gap-2">
                         <input
+                        className="w-100"
                           name={`qty_${i}`}
                           onChange={(e) => onTerms_and_Conditions_Change(e, i)}
                           placeholder={`T&C ${i + 1}`}
