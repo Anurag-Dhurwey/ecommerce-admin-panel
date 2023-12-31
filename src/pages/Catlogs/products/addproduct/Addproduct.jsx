@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CustomInput from "../../../../components/custominput/CustomInput";
+import FormInput from "../../../../components/custominput/FormInput";
 import "./addproduct.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -155,12 +155,14 @@ const Addproduct = () => {
     });
     setForm((pre) => ({ ...pre, meta_data: [...updated_sub_desc] }));
   }
+
   function addMeta_data() {
     setForm((pre) => ({
       ...pre,
       meta_data: [...pre.meta_data, { key: "", value: "" }],
     }));
   }
+  
   function removeMeta_data(i) {
     const copy = [...form.meta_data];
     copy.splice(i, 1);
@@ -312,7 +314,7 @@ const Addproduct = () => {
         <form onSubmit={(e) => e.preventDefault()} className="form">
           <div>
             <h5>Title</h5>
-            <CustomInput
+            <FormInput
               name="title"
               value={form.value}
               setForm={setForm}
@@ -325,7 +327,7 @@ const Addproduct = () => {
           <div>
             <h5>Price</h5>
             <span className="d-flex w-50 gap-5">
-              <CustomInput
+              <FormInput
                 name="price"
                 value={form.price}
                 setForm={setForm}
@@ -334,7 +336,7 @@ const Addproduct = () => {
                 type="number"
                 label="Enter Product Price"
               />
-              <CustomInput
+              <FormInput
                 name="local_price"
                 value={form.local_price}
                 setForm={setForm}
@@ -359,7 +361,7 @@ const Addproduct = () => {
           <div>
             <h5>Description</h5>
             <div className="d-flex w-100 justifu-content-center gap-5">
-              <CustomInput
+              <FormInput
                 name="head_desc"
                 value={form.head_desc}
                 setForm={setForm}
@@ -803,7 +805,7 @@ const Addproduct = () => {
           <select name="" className="form-control py-3 mb-3 " id="">
             <option value="">Select Category</option>
           </select> */}
-          {/* <CustomInput type="number" label="Enter Product Quantity" /> */}
+          {/* <FormInput type="number" label="Enter Product Quantity" /> */}
           <div>
             <Dragger {...props}>
               <p className="ant-upload-drag-icon">
