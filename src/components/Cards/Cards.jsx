@@ -7,7 +7,7 @@ const Cards = () => {
     <div className="Cards">
       {CardsData.map((card, id) => {
         return (
-          <div  key={id} className="parentContainer"  >
+          <div key={id} className="parentContainer">
             <Card
               title={card.title}
               color={card.color}
@@ -15,7 +15,7 @@ const Cards = () => {
               value={card.value}
               png={card.png}
               series={card.series}
-             
+              key={id}
             />
           </div>
         );
