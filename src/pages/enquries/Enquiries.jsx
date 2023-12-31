@@ -29,9 +29,10 @@ for (let i = 0; i < 46; i++) {
 const Enquiries = () => {
   return (
     <div
-      style={{
-        marginTop: "5rem",
-      }}
+    style={{
+      overflow:"scroll",
+      marginTop: "1rem",
+    }}
     >
       <h3 className="mb-4 title">Enquiries</h3>
       <div>

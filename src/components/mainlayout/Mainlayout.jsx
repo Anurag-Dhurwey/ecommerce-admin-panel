@@ -5,7 +5,7 @@ import "./mainlayout.css";
 const Mainlayout = () => {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="AppGlass">
         <Sidebar />
 

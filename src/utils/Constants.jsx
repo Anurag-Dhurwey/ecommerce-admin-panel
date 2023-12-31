@@ -16,36 +16,36 @@ export const catlog = [
     icon: <AiOutlineShoppingCart className="fs-4" />,
     path: "product-list",
   },
-  {
-    path: "brand",
-    icon: <SiBrandfolder className="fs-4" />,
-    name: "Brand",
-  },
-  {
-    path: "list-brand",
-    icon: <SiBrandfolder className="fs-4" />,
-    name: "Brand List",
-  },
+  // {
+  //   path: "brand",
+  //   icon: <SiBrandfolder className="fs-4" />,
+  //   name: "Brand",
+  // },
+  // {
+  //   path: "list-brand",
+  //   icon: <SiBrandfolder className="fs-4" />,
+  //   name: "Brand List",
+  // },
   {
     path: "category",
     icon: <BiCategory className="fs-4" />,
     name: "Category",
   },
-  {
-    path: "list-category",
-    icon: <BiCategory className="fs-4" />,
-    name: "Category List",
-  },
-  {
-    path: "color",
-    icon: <AiOutlineBgColors className="fs-4" />,
-    name: "Color",
-  },
-  {
-    path: "list-color",
-    icon: <AiOutlineBgColors className="fs-4" />,
-    name: "Color List",
-  },
+  // {
+  //   path: "list-category",
+  //   icon: <BiCategory className="fs-4" />,
+  //   name: "Category List",
+  // },
+  // {
+  //   path: "color",
+  //   icon: <AiOutlineBgColors className="fs-4" />,
+  //   name: "Color",
+  // },
+  // {
+  //   path: "list-color",
+  //   icon: <AiOutlineBgColors className="fs-4" />,
+  //   name: "Color List",
+  // },
 ];
 
 export const blog = [

@@ -52,7 +52,8 @@ const Customers = () => {
   return (
     <div
       style={{
-        marginTop: "5rem",
+        overflow:"scroll",
+        marginTop: "1rem",
       }}
     >
       <h3 className="mb-4 title">Customers</h3>

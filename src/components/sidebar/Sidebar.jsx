@@ -1,5 +1,5 @@
 import "./Sidebar.css";
-import logo from "../../image/Tranparent_logo_dark.png";
+// import logo from "../../image/Tranparent_logo_dark.png";
 import { AiOutlineDashboard, AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { catlog, blog } from "../../utils/Constants.jsx";
@@ -11,12 +11,12 @@ const Sidebar = () => {
   return (
     <div className="Sidebar">
       {/* Logo */}
-      <div className="logo">
-        {/* <img src={logo} alt="logo" /> */}
+      {/* <div className="logo">
+        <img src={logo} alt="logo" />
         <span>
           Rai <span>Appliances</span>
         </span>
-      </div>
+      </div> */}
       {/* Menu */}
 
       {/* dashboard */}
@@ -73,7 +73,7 @@ const Sidebar = () => {
 
       {/* blog */}
 
-      {blog.map((item, index) => {
+      {/* {blog.map((item, index) => {
         return (
           <Link
             key={index}
@@ -89,7 +89,7 @@ const Sidebar = () => {
             </div>
           </Link>
         );
-      })}
+      })} */}
 
       {/* orders */}
 
