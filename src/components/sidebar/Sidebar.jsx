@@ -9,7 +9,7 @@ import { useState } from "react";
 const Sidebar = () => {
   const [active, setActive] = useState("dashboard");
   return (
-    <div className="Sidebar">
+    <div className="Sidebar ">
       {/* Logo */}
       {/* <div className="logo">
         <img src={logo} alt="logo" />
@@ -112,7 +112,6 @@ const Sidebar = () => {
           setActive("enquiries");
         }}
         to="enquiries"
-        style={{ marginBottom: "5rem" }}
         className="menu  "
       >
         <div

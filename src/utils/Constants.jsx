@@ -26,16 +26,16 @@ export const catlog = [
   //   icon: <SiBrandfolder className="fs-4" />,
   //   name: "Brand List",
   // },
-  {
-    path: "category",
-    icon: <BiCategory className="fs-4" />,
-    name: "Category",
-  },
   // {
-  //   path: "list-category",
+  //   path: "category",
   //   icon: <BiCategory className="fs-4" />,
-  //   name: "Category List",
+  //   name: "Category",
   // },
+  {
+    path: "list-category",
+    icon: <BiCategory className="fs-4" />,
+    name: "Category List",
+  },
   // {
   //   path: "color",
   //   icon: <AiOutlineBgColors className="fs-4" />,

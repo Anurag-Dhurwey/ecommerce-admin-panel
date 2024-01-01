@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import FormInput from "../../../../components/custominput/FormInput";
 import "./addproduct.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -305,73 +306,50 @@ const Addproduct = () => {
   return (
     <div
       style={{
-        padding:"5px",
         overflow: "scroll",
         marginTop: "1rem",
       }}
     >
       {/* <h3 className="mb-4 title">Add Product</h3> */}
-      <div>
+      <div className="px-2">
         <form onSubmit={(e) => e.preventDefault()} className="form">
           <div>
             <h5>Title</h5>
-            <div className="w-100">
-              <input
-                style={{ width: "95%" }}
-                name="title"
-                value={form.value}
-                min={0}
-                onChange={(e) =>
-                  setForm((pre) => ({
-                    ...pre,
-                    [e.target.name]: e.target.value,
-                  }))
-                }
-                type="text"
-                id=""
-                className="w-90"
-                placeholder="Title"
-              />
-            </div>
+            <FormInput
+              name="title"
+              value={form.value}
+              min={0}
+              setForm={setForm}
+              type="text"
+              id=""
+              className=""
+              label="Title"
+            />
           </div>
           <div>
             <h5>Price</h5>
-            <div className="d-flex">
-              <div className="w-100">
-                <input
-                  name="price"
-                  value={form.price}
-                  min={0}
-                  onChange={(e) =>
-                    setForm((pre) => ({
-                      ...pre,
-                      [e.target.name]: e.target.value,
-                    }))
-                  }
-                  id=""
-                  className=""
-                  type="number"
-                  placeholder="Price"
-                />
-              </div>
-              <div className="w-100">
-                <input
-                  name="local_price"
-                  min={0}
-                  value={form.local_price}
-                  onChange={(e) =>
-                    setForm((pre) => ({
-                      ...pre,
-                      [e.target.name]: e.target.value,
-                    }))
-                  }
-                  id=""
-                  className=""
-                  type="number"
-                  placeholder=" Local Price"
-                />
-              </div>
-            </div>
+            <span className="d-flex w-50 gap-5">
+              <FormInput
+                name="price"
+                value={form.price}
+                min={0}
+                setForm={setForm}
+                id=""
+                className=""
+                type="number"
+                label="Price"
+              />
+              <FormInput
+                name="local_price"
+                min={0}
+                value={form.local_price}
+                setForm={setForm}
+                id=""
+                className=""
+                type="number"
+                label=" Local Price"
+              />
+            </span>
           </div>
           {/* <div className="mb-3">
             {" "}
@@ -384,28 +362,20 @@ const Addproduct = () => {
             />
           </div> */}
 
-          <div className="Deascription">
+          <div>
             <h5>Description</h5>
-            <div>
-              <div>
-                <textarea
-                  style={{ width: "95%" }}
-                  className={``}
-                  id=""
-                  placeholder={"Deascription"}
-                  name="head_desc"
-                  min={0}
-                  value={form.head_desc}
-                  onChange={(e) =>
-                    setForm((pre) => ({
-                      ...pre,
-                      [e.target.name]: e.target.value,
-                    }))
-                  }
-                  rows="3"
-                ></textarea>
-              </div>
-              <div className="">
+            <div className="d-flex w-100 justifu-content-center gap-5">
+              <FormInput
+                name="head_desc"
+                min={0}
+                value={form.head_desc}
+                setForm={setForm}
+                type="textarea"
+                id=""
+                className=""
+                label="Deascription"
+              />
+              <div className="w-50">
                 {form.sub_desc?.map(({ key, value }, i) => {
                   return (
                     <span key={i} className="d-flex gap-2">
@@ -511,6 +481,7 @@ const Addproduct = () => {
                     <input
                       placeholder="category-primary"
                       type="text"
+                      className="form-control"
                     />
                     <button
                       onClick={() =>
@@ -642,16 +613,13 @@ const Addproduct = () => {
             <div>
               <h5>Total Quantity : </h5>
               <div>
-                <input
+                <FormInput
                   value={form.quantity}
                   type="number"
                   id="quantity"
                   name="quantity"
                   min={0}
-                  onChange={(e) =>
-                    setForm((pre) => ({ ...pre, [e.target.name]: e.target.value }))
-                  }
-                  placeholder="total quantity"
+                  setForm={setForm}
                 />
               </div>
             </div>
@@ -684,7 +652,7 @@ const Addproduct = () => {
                   id="tag"
                   placeholder="tag"
                   value={tag}
-                  onChange={(e) => setTag(e.target.value)}
+                  onChange={(e)=>setTag(e.target.value)}
                 />
                 <button
                   onClick={() => {
@@ -843,7 +811,6 @@ const Addproduct = () => {
               <div className="gap-1">
                 <h6> Description : </h6>
                 <textarea
-                  style={{ width: "95%" }}
                   onChange={(e) =>
                     setForm((pre) => ({
                       ...pre,
@@ -853,6 +820,7 @@ const Addproduct = () => {
                   name="policy_desc"
                   id="policy_desc"
                   value={form.policy.description}
+                  className="w-100"
                   rows="2"
                 ></textarea>
               </div>
@@ -900,23 +868,19 @@ const Addproduct = () => {
             <option value="">Select Category</option>
           </select> */}
           {/* <FormInput type="number" label="Enter Product Quantity" /> */}
-          <div style={{}}>
-            <h5>Images</h5>
-            <div className="d-flex justify-content-center">
-              <div style={{ width: "fit-content" }} className="ant_design_img_comp">
-                <Dragger {...props}>
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                  <p className="ant-upload-hint">
-                    Support for a single or bulk upload.
-                  </p>
-                </Dragger>
-              </div>
-            </div>
+          <div>
+            <Dragger {...props}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibited from
+                uploading company data or other banned files.
+              </p>
+            </Dragger>
           </div>
           <button
             className="btn btn-success border-0  rounded-3 my-4"
