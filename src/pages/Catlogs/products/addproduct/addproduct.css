@@ -74,13 +74,12 @@
   width: 50%;
 }
 
-.ant_design_img_comp > span >div{
+.ant_design_img_comp > span > div {
   padding: 10px !important;
 }
-.ant_design_img_comp > span >div>span{
-padding: 0px !important;
+.ant_design_img_comp > span > div > span {
+  padding: 0px !important;
 }
-
 
 @media (max-width: 1200px) {
   .form_product_policy > div {

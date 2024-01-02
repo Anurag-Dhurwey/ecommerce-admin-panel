@@ -33,9 +33,7 @@ const Addproduct = () => {
   const [tag, setTag] = useState("");
   const config = {
     headers: {
-      // "Content-Type": "multipart/form-data",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjcyMjZiODU0ZTc2Y2VhODhmNTE0NyIsImlhdCI6MTcwMzk0NzE1OSwiZXhwIjoxNzA0MDMzNTU5fQ.aIowvau_7DS-Ku8IT8-vpEAEOX8TQcV8Qvh5WTUWvVY",
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
     },
   };
 
@@ -46,34 +44,46 @@ const Addproduct = () => {
       const { file, onSuccess, onError } = info;
       const formData = new FormData();
       formData.append("images", file);
-
-      fetch("http://localhost:5000/api/upload", {
-        method: "POST",
-        body: formData,
-        ...config,
-      })
-        .then((response) => {
-          if (response.ok) {
-            onSuccess(response.json()); // Handle server response
-          } else {
-            onError({ message: "Upload failed" });
-          }
-        })
-        .catch(onError);
+      try {
+        const res = await fetch("http://localhost:5000/api/upload", {
+          method: "POST",
+          body: formData,
+          ...config,
+        });
+        if (res.ok) {
+          onSuccess(res.json());
+        } else {
+          onError(await res.json());
+        }
+      } catch (error) {
+        onError(error);
+      }
     },
     async onRemove(file) {
       const res = await file.response;
-      const { asset_id } = res[0];
-      if (asset_id) {
-        console.log(asset_id);
-        return fetch(
-          `http://localhost:5000/api/upload/delete-img/${asset_id}`,
-          {
-            method: "DELETE",
-            ...config,
+      if (res[0]) {
+        const { asset_id } = res[0];
+        if (!asset_id) throw new Error("asset id not found");
+        try {
+          const res = fetch(
+            `http://localhost:5000/api/upload/delete-img/${asset_id}`,
+            {
+              method: "DELETE",
+              ...config,
+            }
+          );
+          if (res.ok) {
+            return res.json();
+          } else {
+            message.error(`unable to delete something went wrong`);
+            return false;
           }
-        ).then((res) => res.json());
+        } catch (error) {
+          message.error(`unable to delete something went wrong`);
+          return false;
+        }
       } else {
+        message.error(`unable to delete something went wrong`);
         return true;
       }
     },
@@ -107,7 +117,7 @@ const Addproduct = () => {
           };
         });
       } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+        message.error(`${info.file.error.message}.`);
       }
     },
     onDrop(e) {
@@ -300,17 +310,17 @@ const Addproduct = () => {
   }
 
   useEffect(() => {
-    console.log(form.images);
+    console.log(form);
   }, [form]);
   return (
     <div
       style={{
-        padding:"5px",
+        padding: "5px",
         overflow: "scroll",
         marginTop: "1rem",
       }}
     >
-      {/* <h3 className="mb-4 title">Add Product</h3> */}
+      <h3 className="mb-4 title">Add Product</h3>
       <div>
         <form onSubmit={(e) => e.preventDefault()} className="form">
           <div>
@@ -373,16 +383,6 @@ const Addproduct = () => {
               </div>
             </div>
           </div>
-          {/* <div className="mb-3">
-            {" "}
-            <ReactQuill
-              theme="snow"
-              value={desc}
-              onChange={(evt) => {
-                handleDesc(evt);
-              }}
-            />
-          </div> */}
 
           <div className="Deascription">
             <h5>Description</h5>
@@ -508,10 +508,7 @@ const Addproduct = () => {
                   </select>
                 ) : (
                   <span>
-                    <input
-                      placeholder="category-primary"
-                      type="text"
-                    />
+                    <input placeholder="category-primary" type="text" />
                     <button
                       onClick={() =>
                         setForm((pre) => ({
@@ -565,9 +562,7 @@ const Addproduct = () => {
                             />
                           </span>
 
-                          {/* <span> */}
                           <button onClick={() => removeSize(i)}>delete</button>
-                          {/* </span> */}
                         </div>
                       );
                     })}
@@ -649,7 +644,10 @@ const Addproduct = () => {
                   name="quantity"
                   min={0}
                   onChange={(e) =>
-                    setForm((pre) => ({ ...pre, [e.target.name]: e.target.value }))
+                    setForm((pre) => ({
+                      ...pre,
+                      [e.target.name]: e.target.value,
+                    }))
                   }
                   placeholder="total quantity"
                 />
@@ -890,20 +888,13 @@ const Addproduct = () => {
               )}
             </div>
           </div>
-          {/* <select name="" className="form-control py-3 mb-3 " id="">
-            <option value="">Select Brand</option>
-          </select>
-          <select name="" className="form-control py-3 mb-3 " id="">
-            <option value="">Select Color</option>
-          </select>
-          <select name="" className="form-control py-3 mb-3 " id="">
-            <option value="">Select Category</option>
-          </select> */}
-          {/* <FormInput type="number" label="Enter Product Quantity" /> */}
           <div style={{}}>
             <h5>Images</h5>
             <div className="d-flex justify-content-center">
-              <div style={{ width: "fit-content" }} className="ant_design_img_comp">
+              <div
+                style={{ width: "fit-content", height: "fit-content" }}
+                className="ant_design_img_comp"
+              >
                 <Dragger {...props}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
