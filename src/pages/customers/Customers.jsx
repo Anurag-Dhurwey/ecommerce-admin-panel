@@ -10,6 +10,9 @@ const columns = [
   {
     title: "Firstname",
     dataIndex: "Firstname",
+    sorter: (a, b) => a.Firstname.localeCompare(b.Firstname),
+    defaultSortOrder: "descend",
+    // sortDirections: ["descend", "ascend"],
   },
   {
     title: "Lastname",
@@ -43,7 +46,7 @@ const Customers = () => {
       data1.push({
         key: i + 1,
         Firstname: customersState[i].firstname,
-        Lastname: customersState[i].firstname,
+        Lastname: customersState[i].lastname,
         email: customersState[i].email,
         mobile: customersState[i].mobile,
       });
