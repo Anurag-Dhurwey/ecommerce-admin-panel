@@ -9,15 +9,20 @@ import { message, Upload } from "antd";
 const { Dragger } = Upload;
 
 const Addproduct = () => {
+  const [validation_errors, setValidation_errors] = useState([]);
+
   const [form, setForm] = useState({
     title: "",
     price: "",
     local_price: "",
-    head_desc: "",
-    sub_desc: [{ key: "", value: "" }],
+    description: {
+      head_desc: "",
+      sub_desc: [],
+    },
+
     images: { primary: [], descriptive: [] },
     meta_data: [],
-    category: { primary: "", secondry: "", other: false },
+    category: { primary: "", secondry: [], other: false },
     sizes: [],
     colors: [],
     quantity: 0,
@@ -36,6 +41,134 @@ const Addproduct = () => {
       Authorization: `Bearer ${sessionStorage.getItem("token")}`,
     },
   };
+
+  function isFormValid() {
+    let totalInvalidity = 0;
+    setValidation_errors([]);
+    function check_array(array, error) {
+      if (array.some((arr) => !arr)) {
+        setValidation_errors((pre) => [...pre, `${error}`]);
+        totalInvalidity += 1;
+      }
+    }
+
+    function check_arrayOf_Obj(array, error, ...key) {
+      if (
+        array.some((i_arr) => {
+          return key.some((i_key) => {
+            return !i_arr[i_key];
+          });
+        })
+      ) {
+        setValidation_errors((pre) => [...pre, `${error}`]);
+        totalInvalidity += 1;
+      }
+    }
+
+    const {
+      title,
+      price,
+      local_price,
+      description,
+      images,
+      meta_data,
+      category,
+      sizes,
+      colors,
+      tags,
+      policy,
+      terms_and_conditions,
+    } = form;
+    const { head_desc, sub_desc } = description;
+    if (!title) {
+      setValidation_errors((pre) => [...pre, "Title is required"]);
+      totalInvalidity += 1;
+    }
+    if (!price) {
+      setValidation_errors((pre) => [...pre, "Price is not valid"]);
+      totalInvalidity += 1;
+    }
+    if (local_price < price || !local_price) {
+      setValidation_errors((pre) => [
+        ...pre,
+        "local_price is not valid (local_price should be less than original price )",
+      ]);
+      totalInvalidity += 1;
+    }
+    if (!head_desc) {
+      setValidation_errors((pre) => [...pre, "description is not valid"]);
+      totalInvalidity += 1;
+    }
+    check_arrayOf_Obj(
+      sub_desc,
+      "Table description is empty (fill it or remove)",
+      "key",
+      "value"
+    );
+    check_arrayOf_Obj(
+      meta_data,
+      "Meta-Data is empty (fill it or remove)",
+      "key",
+      "value"
+    );
+    if (!images.primary.length) {
+      setValidation_errors((pre) => [...pre, "Images are required"]);
+      totalInvalidity += 1;
+    }
+    if (!category.primary) {
+      setValidation_errors((pre) => [...pre, "Category is required"]);
+      totalInvalidity += 1;
+    }
+    check_array(category.secondry, "Optional category is empty");
+    check_arrayOf_Obj(
+      sizes,
+      "Sizes are empty (fill it or remove)",
+      "size",
+      "qty"
+    );
+    check_arrayOf_Obj(
+      colors,
+      "Colors are empty (fill it or remove)",
+      "color",
+      "qty"
+    );
+    check_array(tags, "Tag is empty");
+    check_array(terms_and_conditions, "terms_and_conditions is empty");
+    if (
+      (policy.exchange.status && !policy.exchange.validity) ||
+      (policy.return_or_refund.status && !policy.return_or_refund.validity)
+    ) {
+      setValidation_errors((pre) => [...pre, "Validity is required"]);
+      totalInvalidity += 1;
+    }
+    check_array(policy.rules, "policy rules are empty (fill them or remove)");
+    return totalInvalidity;
+  }
+
+  async function onSubmitHandler(e) {
+    e.preventDefault();
+    if (isFormValid() < 1) {
+      try {
+        const res = await fetch(`http://localhost:5000/api/product`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(form),
+        });
+        if (res.ok) {
+          const id = await res.json().then((res) => res._id);
+          message.success(`${id} uploaded`);
+        } else {
+          message.error(`duplicate slug found`);
+        }
+      } catch (error) {
+        console.log(error);
+        message.error(error.message);
+      }
+    }
+  }
 
   const props = {
     name: "images",
@@ -61,29 +194,31 @@ const Addproduct = () => {
     },
     async onRemove(file) {
       const res = await file.response;
-      if (res[0]) {
+      // console.log(file)
+      // console.log(res)
+      if (res && res[0] && res[0].asset_id) {
         const { asset_id } = res[0];
-        if (!asset_id) throw new Error("asset id not found");
         try {
-          const res = fetch(
+          const response = await fetch(
             `http://localhost:5000/api/upload/delete-img/${asset_id}`,
             {
               method: "DELETE",
               ...config,
             }
           );
-          if (res.ok) {
-            return res.json();
+          if (response.ok) {
+            return true;
           } else {
-            message.error(`unable to delete something went wrong`);
+            message.error(response.statusText);
             return false;
           }
         } catch (error) {
-          message.error(`unable to delete something went wrong`);
+          console.log({ error });
+          message.error(error.message);
           return false;
         }
       } else {
-        message.error(`unable to delete something went wrong`);
+        message.error(`file not found`);
         return true;
       }
     },
@@ -126,7 +261,7 @@ const Addproduct = () => {
   };
 
   function onSub_desc_Change(e, index) {
-    const updated_sub_desc = form.sub_desc.map((item, i) => {
+    const updated_sub_desc = form.description.sub_desc.map((item, i) => {
       if (i === index) {
         return e.target.name.includes("key")
           ? { ...item, key: e.target.value }
@@ -135,26 +270,32 @@ const Addproduct = () => {
         return item;
       }
     });
-    setForm((pre) => ({ ...pre, sub_desc: [...updated_sub_desc] }));
+    setForm((pre) => ({
+      ...pre,
+      description: { ...pre.description, sub_desc: [...updated_sub_desc] },
+    }));
   }
 
   function addSub_desc() {
     setForm((pre) => ({
       ...pre,
-      sub_desc: [...pre.sub_desc, { key: "", value: "" }],
+      description: {
+        ...pre.description,
+        sub_desc: [...pre.description.sub_desc, { key: "", value: "" }],
+      },
     }));
   }
   function removeSub_desc(i) {
-    const copy = [...form.sub_desc];
+    const copy = [...form.description.sub_desc];
     copy.splice(i, 1);
     setForm((pre) => ({
       ...pre,
-      sub_desc: copy,
+      description: { ...pre.description, sub_desc: copy },
     }));
   }
 
   function onMeta_data_Change(e, index) {
-    const updated_sub_desc = form.meta_data.map((item, i) => {
+    const updated_meta = form.meta_data.map((item, i) => {
       if (i === index) {
         return e.target.name.includes("key")
           ? { ...item, key: e.target.value }
@@ -163,7 +304,7 @@ const Addproduct = () => {
         return item;
       }
     });
-    setForm((pre) => ({ ...pre, meta_data: [...updated_sub_desc] }));
+    setForm((pre) => ({ ...pre, meta_data: [...updated_meta] }));
   }
 
   function addMeta_data() {
@@ -201,7 +342,7 @@ const Addproduct = () => {
       if (i === index) {
         const val = e.target.value;
         return e.target.name.includes("qty")
-          ? { ...item, qty: Math.abs(val) }
+          ? { ...item, qty: Math.abs(parseInt(val)) }
           : { ...item, size: val };
       } else {
         return item;
@@ -230,7 +371,7 @@ const Addproduct = () => {
       if (i === index) {
         const val = e.target.value;
         return e.target.name.includes("qty")
-          ? { ...item, qty: Math.abs(val) }
+          ? { ...item, qty: Math.abs(parseInt(val)) }
           : { ...item, color: val };
       } else {
         return item;
@@ -322,7 +463,7 @@ const Addproduct = () => {
     >
       <h3 className="mb-4 title">Add Product</h3>
       <div>
-        <form onSubmit={(e) => e.preventDefault()} className="form">
+        <form onSubmit={(e) => onSubmitHandler(e)} className="form">
           <div>
             <h5>Title</h5>
             <div className="w-100">
@@ -355,7 +496,7 @@ const Addproduct = () => {
                   onChange={(e) =>
                     setForm((pre) => ({
                       ...pre,
-                      [e.target.name]: e.target.value,
+                      [e.target.name]: parseInt(e.target.value),
                     }))
                   }
                   id=""
@@ -372,7 +513,7 @@ const Addproduct = () => {
                   onChange={(e) =>
                     setForm((pre) => ({
                       ...pre,
-                      [e.target.name]: e.target.value,
+                      [e.target.name]: parseInt(e.target.value),
                     }))
                   }
                   id=""
@@ -392,21 +533,24 @@ const Addproduct = () => {
                   style={{ width: "95%" }}
                   className={``}
                   id=""
-                  placeholder={"Deascription"}
+                  placeholder={"Description"}
                   name="head_desc"
                   min={0}
-                  value={form.head_desc}
+                  value={form.description.head_desc}
                   onChange={(e) =>
                     setForm((pre) => ({
                       ...pre,
-                      [e.target.name]: e.target.value,
+                      description: {
+                        ...pre.description,
+                        [e.target.name]: e.target.value,
+                      },
                     }))
                   }
                   rows="3"
                 ></textarea>
               </div>
               <div className="">
-                {form.sub_desc?.map(({ key, value }, i) => {
+                {form.description.sub_desc?.map(({ key, value }, i) => {
                   return (
                     <span key={i} className="d-flex gap-2">
                       <input
@@ -428,7 +572,7 @@ const Addproduct = () => {
                   );
                 })}
 
-                {form.sub_desc.length ? (
+                {form.description.sub_desc.length ? (
                   <button onClick={() => addSub_desc()}>more</button>
                 ) : (
                   <button className="w-fit h-fit" onClick={() => addSub_desc()}>
@@ -909,6 +1053,20 @@ const Addproduct = () => {
               </div>
             </div>
           </div>
+          {validation_errors.length ? (
+            <div>
+              <h5 className="text-danger">Fix these errors</h5>
+              <div>
+                {validation_errors.map((err, i) => {
+                  return (
+                    <p className="text-danger" key={i}>
+                      {i + 1} : {err}
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
           <button
             className="btn btn-success border-0  rounded-3 my-4"
             type="submit"
