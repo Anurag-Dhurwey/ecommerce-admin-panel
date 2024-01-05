@@ -1,8 +1,8 @@
 import { Table } from "antd";
-import { BiEdit } from "react-icons/bi";
-import { AiFillDelete } from "react-icons/ai";
+// import { BiEdit } from "react-icons/bi";
+// import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { getDraftProducts } from "../../../features/products/productsSlice";
+import { getDraftProducts } from "../../../features/product/productSlice";
 import { useEffect, useState } from "react";
 import Addproduct from "./addproduct/Addproduct";
 // import { Link, useNavigate } from "react-router-dom";
