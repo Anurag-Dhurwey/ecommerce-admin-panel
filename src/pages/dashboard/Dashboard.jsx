@@ -10,7 +10,7 @@ const Dashboard = () => {
       style={{
         marginTop: "1rem"
       }}
-      className="MainDash scrolling"
+      className="MainDash"
     >
       <h2 className="">Dashboard</h2>
       <Cards />

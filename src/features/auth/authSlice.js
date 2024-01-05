@@ -18,10 +18,13 @@ export const login = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await authService.login(user);
-      console.log(response);
-      return response;
+      if(response){
+        return response
+      }else{
+        return thunkAPI.rejectWithValue({message:"response did't got"});
+      }
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue({message:error.toString()});
     }
   }
 );

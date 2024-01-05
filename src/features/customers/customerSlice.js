@@ -14,6 +14,7 @@ export const getUsers = createAsyncThunk(
     }
   }
 );
+
 const initialState = {
   customers: [],
   isError: false,

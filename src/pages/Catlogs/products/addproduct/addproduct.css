@@ -22,10 +22,33 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 25px;
+  gap: 10px;
 }
 .form_row div {
   width: 48%;
+}
+.form_row div .tags_list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  column-gap: 4px;
+  padding-bottom: 1rem;
+}
+.form_row div .tags_list p {
+  border-radius: 4px;
+  border: 2px solid gray;
+  padding: 0px 5px;
+  font-size: smaller;
+  font-weight: bold;
+  margin-bottom: 0%;
+}
+
+.form_row div .tags_list p button {
+  /* background: none; */
+  margin: 2px 0px;
+  border-radius: 4px;
+  border: none;
 }
 
 .form_product_policy div {
@@ -37,11 +60,44 @@
   flex-wrap: wrap;
 }
 
-.form_product_policy div div{
+.form_product_policy div div {
   width: 48%;
 }
-/* .form_product_policy .form_product_policy_rules {
 
-} */
+.Deascription > div {
+  display: flex;
+  justify-content: center;
+  column-gap: 10px;
+}
 
+.Deascription > div > div {
+  width: 50%;
+}
 
+.ant_design_img_comp > span > div {
+  padding: 10px !important;
+}
+.ant_design_img_comp > span > div > span {
+  padding: 0px !important;
+}
+
+@media (max-width: 1200px) {
+  .form_product_policy > div {
+    flex-direction: column;
+  }
+  .form_product_policy div div {
+    width: 100%;
+  }
+  .form_row {
+    flex-direction: column;
+  }
+  .form_row div {
+    width: 100%;
+  }
+  .Deascription > div {
+    flex-direction: column;
+  }
+  .Deascription > div > div {
+    width: 100%;
+  }
+}

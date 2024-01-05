@@ -1,25 +1,30 @@
 .Cards {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 .parentContainer {
+  max-width: 400px;
   width: 100%;
 }
 
 .parentContainer {
   margin-bottom: 0.5rem;
 }
-@media screen and (max-width: 1200px) {
-  .Cards {
+@media screen and (max-width: 800px) {
+  /* .Cards {
     flex-direction: column;
-  }
+  } */
   .parentContainer {
     height: 9rem;
   }
 }
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
   .Cards {
     width: 90%;
   }
-}
+} */

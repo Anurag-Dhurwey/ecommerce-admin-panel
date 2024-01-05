@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import FormInput from "../../../../components/custominput/FormInput";
 import "./addproduct.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -6,25 +7,18 @@ import "react-quill/dist/quill.snow.css";
 // upload image section code
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
-import axios from "axios";
 const { Dragger } = Upload;
 
-const Addproduct = (props) => {
-  const { draft_product } = props;
-  const [submitState, setSubmitState] = useState("ADD");
-  const [validation_errors, setValidation_errors] = useState([]);
+const Addproduct = () => {
   const [form, setForm] = useState({
     title: "",
     price: "",
     local_price: "",
-    description: {
-      head_desc: "",
-      sub_desc: [],
-    },
-
+    head_desc: "",
+    sub_desc: [{ key: "", value: "" }],
     images: { primary: [], descriptive: [] },
     meta_data: [],
-    category: { primary: "", secondry: [], other: false },
+    category: { primary: "", secondry: "", other: false },
     sizes: [],
     colors: [],
     quantity: 0,
@@ -36,217 +30,51 @@ const Addproduct = (props) => {
       rules: [],
     },
     terms_and_conditions: [],
-    as_draft: false,
   });
   const [tag, setTag] = useState("");
   const config = {
     headers: {
-      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      // "Content-Type": "multipart/form-data",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjcyMjZiODU0ZTc2Y2VhODhmNTE0NyIsImlhdCI6MTcwMzk0NzE1OSwiZXhwIjoxNzA0MDMzNTU5fQ.aIowvau_7DS-Ku8IT8-vpEAEOX8TQcV8Qvh5WTUWvVY",
     },
   };
 
-  function isFormValid() {
-    let totalInvalidity = 0;
-    setValidation_errors([]);
-    function check_array(array, error) {
-      if (array.some((arr) => !arr)) {
-        setValidation_errors((pre) => [...pre, `${error}`]);
-        totalInvalidity += 1;
-      }
-    }
-
-    function check_arrayOf_Obj(array, error, ...key) {
-      if (
-        array.some((i_arr) => {
-          return key.some((i_key) => {
-            return !i_arr[i_key];
-          });
-        })
-      ) {
-        setValidation_errors((pre) => [...pre, `${error}`]);
-        totalInvalidity += 1;
-      }
-    }
-
-    const {
-      title,
-      price,
-      local_price,
-      description,
-      images,
-      meta_data,
-      category,
-      sizes,
-      colors,
-      tags,
-      policy,
-      terms_and_conditions,
-    } = form;
-    const { head_desc, sub_desc } = description;
-    if (!title) {
-      setValidation_errors((pre) => [...pre, "Title is required"]);
-      totalInvalidity += 1;
-    }
-    if (!price) {
-      setValidation_errors((pre) => [...pre, "Price is not valid"]);
-      totalInvalidity += 1;
-    }
-    if (local_price < price || !local_price) {
-      setValidation_errors((pre) => [
-        ...pre,
-        "local_price is not valid (original price should be less than local_price )",
-      ]);
-      totalInvalidity += 1;
-    }
-    if (!head_desc) {
-      setValidation_errors((pre) => [...pre, "description is not valid"]);
-      totalInvalidity += 1;
-    }
-    check_arrayOf_Obj(
-      sub_desc,
-      "Table description is empty (fill it or remove)",
-      "key",
-      "value"
-    );
-    check_arrayOf_Obj(
-      meta_data,
-      "Meta-Data is empty (fill it or remove)",
-      "key",
-      "value"
-    );
-    if (!images.primary.length) {
-      setValidation_errors((pre) => [...pre, "Images are required"]);
-      totalInvalidity += 1;
-    }
-    if (!category.primary) {
-      setValidation_errors((pre) => [...pre, "Category is required"]);
-      totalInvalidity += 1;
-    }
-    check_array(category.secondry, "Optional category is empty");
-    check_arrayOf_Obj(
-      sizes,
-      "Sizes are empty (fill it or remove)",
-      "size",
-      "qty"
-    );
-    check_arrayOf_Obj(
-      colors,
-      "Colors are empty (fill it or remove)",
-      "color",
-      "qty"
-    );
-    check_array(tags, "Tag is empty");
-    check_array(terms_and_conditions, "terms_and_conditions is empty");
-    if (
-      (policy.exchange.status && !policy.exchange.validity) ||
-      (policy.return_or_refund.status && !policy.return_or_refund.validity)
-    ) {
-      setValidation_errors((pre) => [...pre, "Validity is required"]);
-      totalInvalidity += 1;
-    }
-    check_array(policy.rules, "policy rules are empty (fill them or remove)");
-    return totalInvalidity;
-  }
-
-  async function onSubmitHandler(e) {
-    e.preventDefault();
-    console.log("submitting");
-    if (isFormValid() < 1) {
-      if (submitState === "ADD") {
-        try {
-          const res = await axios.post(
-            `http://localhost:5000/api/product`,
-            form,
-            {
-              headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-              },
-            }
-          );
-
-          if (res.data._id) {
-            message.success(`${res.data._id} uploaded`);
-          }
-          console.log(res);
-        } catch (error) {
-          console.log(error);
-          message.error(error.message);
-        }
-      } else if (submitState === "UPDATE") {
-        try {
-          const res = await axios.put(
-            `http://localhost:5000/api/product/${draft_product._id}`,
-            form,
-            {
-              headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-              },
-            }
-          );
-
-          console.log(res);
-          if (res.data._id) {
-            message.success(`${res.data._id} updated successfully`);
-          }
-        } catch (error) {
-          console.log(error);
-          message.error(error.message);
-        }
-      }else{
-        message.error("something went wrong");
-      }
-    }
-  }
-
-  const img_upload_config = {
+  const props = {
     name: "images",
     multiple: true,
     async customRequest(info) {
       const { file, onSuccess, onError } = info;
       const formData = new FormData();
       formData.append("images", file);
-      try {
-        const res = await fetch("http://localhost:5000/api/upload", {
-          method: "POST",
-          body: formData,
-          ...config,
-        });
-        if (res.ok) {
-          onSuccess(res.json());
-        } else {
-          onError(await res.json());
-        }
-      } catch (error) {
-        onError(error);
-      }
+
+      fetch("http://localhost:5000/api/upload", {
+        method: "POST",
+        body: formData,
+        ...config,
+      })
+        .then((response) => {
+          if (response.ok) {
+            onSuccess(response.json()); // Handle server response
+          } else {
+            onError({ message: "Upload failed" });
+          }
+        })
+        .catch(onError);
     },
     async onRemove(file) {
       const res = await file.response;
-      // console.log(file)
-      // console.log(res)
-      if (res && res[0] && res[0].asset_id) {
-        const { asset_id } = res[0];
-        try {
-          const response = await fetch(
-            `http://localhost:5000/api/upload/delete-img/${asset_id}`,
-            {
-              method: "DELETE",
-              ...config,
-            }
-          );
-          if (response.ok) {
-            return true;
-          } else {
-            message.error(response.statusText);
-            return false;
+      const { asset_id } = res[0];
+      if (asset_id) {
+        console.log(asset_id);
+        return fetch(
+          `http://localhost:5000/api/upload/delete-img/${asset_id}`,
+          {
+            method: "DELETE",
+            ...config,
           }
-        } catch (error) {
-          console.log({ error });
-          message.error(error.message);
-          return false;
-        }
+        ).then((res) => res.json());
       } else {
-        message.error(`file not found`);
         return true;
       }
     },
@@ -280,7 +108,7 @@ const Addproduct = (props) => {
           };
         });
       } else if (status === "error") {
-        message.error(`${info.file.error.message}.`);
+        message.error(`${info.file.name} file upload failed.`);
       }
     },
     onDrop(e) {
@@ -289,7 +117,7 @@ const Addproduct = (props) => {
   };
 
   function onSub_desc_Change(e, index) {
-    const updated_sub_desc = form.description.sub_desc.map((item, i) => {
+    const updated_sub_desc = form.sub_desc.map((item, i) => {
       if (i === index) {
         return e.target.name.includes("key")
           ? { ...item, key: e.target.value }
@@ -298,32 +126,26 @@ const Addproduct = (props) => {
         return item;
       }
     });
-    setForm((pre) => ({
-      ...pre,
-      description: { ...pre.description, sub_desc: [...updated_sub_desc] },
-    }));
+    setForm((pre) => ({ ...pre, sub_desc: [...updated_sub_desc] }));
   }
 
   function addSub_desc() {
     setForm((pre) => ({
       ...pre,
-      description: {
-        ...pre.description,
-        sub_desc: [...pre.description.sub_desc, { key: "", value: "" }],
-      },
+      sub_desc: [...pre.sub_desc, { key: "", value: "" }],
     }));
   }
   function removeSub_desc(i) {
-    const copy = [...form.description.sub_desc];
+    const copy = [...form.sub_desc];
     copy.splice(i, 1);
     setForm((pre) => ({
       ...pre,
-      description: { ...pre.description, sub_desc: copy },
+      sub_desc: copy,
     }));
   }
 
   function onMeta_data_Change(e, index) {
-    const updated_meta = form.meta_data.map((item, i) => {
+    const updated_sub_desc = form.meta_data.map((item, i) => {
       if (i === index) {
         return e.target.name.includes("key")
           ? { ...item, key: e.target.value }
@@ -332,7 +154,7 @@ const Addproduct = (props) => {
         return item;
       }
     });
-    setForm((pre) => ({ ...pre, meta_data: [...updated_meta] }));
+    setForm((pre) => ({ ...pre, meta_data: [...updated_sub_desc] }));
   }
 
   function addMeta_data() {
@@ -370,7 +192,7 @@ const Addproduct = (props) => {
       if (i === index) {
         const val = e.target.value;
         return e.target.name.includes("qty")
-          ? { ...item, qty: Math.abs(parseInt(val)) }
+          ? { ...item, qty: Math.abs(val) }
           : { ...item, size: val };
       } else {
         return item;
@@ -399,7 +221,7 @@ const Addproduct = (props) => {
       if (i === index) {
         const val = e.target.value;
         return e.target.name.includes("qty")
-          ? { ...item, qty: Math.abs(parseInt(val)) }
+          ? { ...item, qty: Math.abs(val) }
           : { ...item, color: val };
       } else {
         return item;
@@ -479,113 +301,82 @@ const Addproduct = (props) => {
   }
 
   useEffect(() => {
-    if (draft_product?._id) {
-      setSubmitState("UPDATE");
-      setForm(draft_product);
-    }
-  }, [draft_product]);
-
-  useEffect(() => {
-    console.log(submitState);
-  }, [submitState]);
+    console.log(form.images);
+  }, [form]);
   return (
     <div
       style={{
-        padding: "5px",
         overflow: "scroll",
         marginTop: "1rem",
       }}
     >
-      <h3 className="mb-4 title">Add Product</h3>
-      <div>
-        <form onSubmit={(e) => onSubmitHandler(e)} className="form">
+      {/* <h3 className="mb-4 title">Add Product</h3> */}
+      <div className="px-2">
+        <form onSubmit={(e) => e.preventDefault()} className="form">
           <div>
             <h5>Title</h5>
-            <div className="w-100">
-              <input
-                style={{ width: "95%" }}
-                name="title"
-                value={form.title}
-                min={0}
-                onChange={(e) =>
-                  setForm((pre) => ({
-                    ...pre,
-                    [e.target.name]: e.target.value,
-                  }))
-                }
-                type="text"
-                id=""
-                className="w-90"
-                placeholder="Title"
-              />
-            </div>
+            <FormInput
+              name="title"
+              value={form.value}
+              min={0}
+              setForm={setForm}
+              type="text"
+              id=""
+              className=""
+              label="Title"
+            />
           </div>
           <div>
             <h5>Price</h5>
-            <div className="d-flex">
-              <div className="w-100">
-                <input
-                  name="price"
-                  value={form.price}
-                  min={0}
-                  onChange={(e) =>
-                    setForm((pre) => ({
-                      ...pre,
-                      [e.target.name]: parseInt(e.target.value),
-                    }))
-                  }
-                  id=""
-                  className=""
-                  type="number"
-                  placeholder="Price"
-                />
-              </div>
-              <div className="w-100">
-                <input
-                  name="local_price"
-                  min={0}
-                  value={form.local_price}
-                  onChange={(e) =>
-                    setForm((pre) => ({
-                      ...pre,
-                      [e.target.name]: parseInt(e.target.value),
-                    }))
-                  }
-                  id=""
-                  className=""
-                  type="number"
-                  placeholder=" Local Price"
-                />
-              </div>
-            </div>
+            <span className="d-flex w-50 gap-5">
+              <FormInput
+                name="price"
+                value={form.price}
+                min={0}
+                setForm={setForm}
+                id=""
+                className=""
+                type="number"
+                label="Price"
+              />
+              <FormInput
+                name="local_price"
+                min={0}
+                value={form.local_price}
+                setForm={setForm}
+                id=""
+                className=""
+                type="number"
+                label=" Local Price"
+              />
+            </span>
           </div>
+          {/* <div className="mb-3">
+            {" "}
+            <ReactQuill
+              theme="snow"
+              value={desc}
+              onChange={(evt) => {
+                handleDesc(evt);
+              }}
+            />
+          </div> */}
 
-          <div className="Deascription">
+          <div>
             <h5>Description</h5>
-            <div>
-              <div>
-                <textarea
-                  style={{ width: "95%" }}
-                  className={``}
-                  id=""
-                  placeholder={"Description"}
-                  name="head_desc"
-                  min={0}
-                  value={form.description.head_desc}
-                  onChange={(e) =>
-                    setForm((pre) => ({
-                      ...pre,
-                      description: {
-                        ...pre.description,
-                        [e.target.name]: e.target.value,
-                      },
-                    }))
-                  }
-                  rows="3"
-                ></textarea>
-              </div>
-              <div className="">
-                {form.description.sub_desc?.map(({ key, value }, i) => {
+            <div className="d-flex w-100 justifu-content-center gap-5">
+              <FormInput
+                name="head_desc"
+                min={0}
+                value={form.head_desc}
+                setForm={setForm}
+                type="textarea"
+                id=""
+                className=""
+                label="Deascription"
+              />
+              <div className="w-50">
+                {form.sub_desc?.map(({ key, value }, i) => {
                   return (
                     <span key={i} className="d-flex gap-2">
                       <input
@@ -602,23 +393,15 @@ const Addproduct = (props) => {
                         type="text"
                         value={value}
                       />
-                      <button type="button" onClick={() => removeSub_desc(i)}>
-                        delete
-                      </button>
+                      <button onClick={() => removeSub_desc(i)}>delete</button>
                     </span>
                   );
                 })}
 
-                {form.description.sub_desc.length ? (
-                  <button type="button" onClick={() => addSub_desc()}>
-                    more
-                  </button>
+                {form.sub_desc.length ? (
+                  <button onClick={() => addSub_desc()}>more</button>
                 ) : (
-                  <button
-                    type="button"
-                    className="w-fit h-fit"
-                    onClick={() => addSub_desc()}
-                  >
+                  <button className="w-fit h-fit" onClick={() => addSub_desc()}>
                     would you like to describe using table
                   </button>
                 )}
@@ -650,10 +433,7 @@ const Addproduct = (props) => {
                             type="text"
                             value={value}
                           />
-                          <button
-                            type="button"
-                            onClick={() => removeMeta_data(i)}
-                          >
+                          <button onClick={() => removeMeta_data(i)}>
                             delete
                           </button>
                         </span>
@@ -661,14 +441,12 @@ const Addproduct = (props) => {
                     })}
                   </div>
                 ) : (
-                  <button type="button" onClick={() => addMeta_data()}>
+                  <button onClick={() => addMeta_data()}>
                     would you like to add meta data
                   </button>
                 )}
                 {form.meta_data.length ? (
-                  <button type="button" onClick={() => addMeta_data()}>
-                    more
-                  </button>
+                  <button onClick={() => addMeta_data()}>more</button>
                 ) : null}
               </div>
             </div>
@@ -700,9 +478,12 @@ const Addproduct = (props) => {
                   </select>
                 ) : (
                   <span>
-                    <input placeholder="category-primary" type="text" />
+                    <input
+                      placeholder="category-primary"
+                      type="text"
+                      className="form-control"
+                    />
                     <button
-                      type="button"
                       onClick={() =>
                         setForm((pre) => ({
                           ...pre,
@@ -755,18 +536,16 @@ const Addproduct = (props) => {
                             />
                           </span>
 
-                          <button type="button" onClick={() => removeSize(i)}>
-                            delete
-                          </button>
+                          {/* <span> */}
+                          <button onClick={() => removeSize(i)}>delete</button>
+                          {/* </span> */}
                         </div>
                       );
                     })}
-                    <button type="button" onClick={() => addSize()}>
-                      more
-                    </button>
+                    <button onClick={() => addSize()}>more</button>
                   </div>
                 ) : (
-                  <button type="button" onClick={() => addSize()}>
+                  <button onClick={() => addSize()}>
                     would you like to add Sizes
                   </button>
                 )}
@@ -816,18 +595,14 @@ const Addproduct = (props) => {
                             type="text"
                             value={color}
                           /> */}
-                          <button type="button" onClick={() => removeColor(i)}>
-                            delete
-                          </button>
+                          <button onClick={() => removeColor(i)}>delete</button>
                         </div>
                       );
                     })}
-                    <button type="button" onClick={() => addColor()}>
-                      more
-                    </button>
+                    <button onClick={() => addColor()}>more</button>
                   </div>
                 ) : (
-                  <button type="button" onClick={() => addColor()}>
+                  <button onClick={() => addColor()}>
                     would you like to add colors
                   </button>
                 )}
@@ -838,19 +613,13 @@ const Addproduct = (props) => {
             <div>
               <h5>Total Quantity : </h5>
               <div>
-                <input
+                <FormInput
                   value={form.quantity}
                   type="number"
                   id="quantity"
                   name="quantity"
                   min={0}
-                  onChange={(e) =>
-                    setForm((pre) => ({
-                      ...pre,
-                      [e.target.name]: e.target.value,
-                    }))
-                  }
-                  placeholder="total quantity"
+                  setForm={setForm}
                 />
               </div>
             </div>
@@ -862,7 +631,6 @@ const Addproduct = (props) => {
                     <p key={i}>
                       {tag}{" "}
                       <button
-                        type="button"
                         onClick={() => {
                           setForm((pre) => {
                             const copy_tags = [...pre.tags];
@@ -884,10 +652,9 @@ const Addproduct = (props) => {
                   id="tag"
                   placeholder="tag"
                   value={tag}
-                  onChange={(e) => setTag(e.target.value)}
+                  onChange={(e)=>setTag(e.target.value)}
                 />
                 <button
-                  type="button"
                   onClick={() => {
                     if (!tag) return;
                     setForm((pre) => ({ ...pre, tags: [tag, ...pre.tags] }));
@@ -1025,25 +792,18 @@ const Addproduct = (props) => {
                             value={rule}
                             min={1}
                           />
-                          <button
-                            type="button"
-                            onClick={() => removePolicy_Rule(i)}
-                          >
+                          <button onClick={() => removePolicy_Rule(i)}>
                             delete
                           </button>
                         </span>
                       );
                     })}
-                    <button
-                      type="button"
-                      className=""
-                      onClick={() => addPolicy_Rule()}
-                    >
+                    <button className="" onClick={() => addPolicy_Rule()}>
                       more
                     </button>
                   </div>
                 ) : (
-                  <button type="button" onClick={() => addPolicy_Rule()}>
+                  <button onClick={() => addPolicy_Rule()}>
                     would you like to add policy of this product
                   </button>
                 )}
@@ -1051,7 +811,6 @@ const Addproduct = (props) => {
               <div className="gap-1">
                 <h6> Description : </h6>
                 <textarea
-                  style={{ width: "95%" }}
                   onChange={(e) =>
                     setForm((pre) => ({
                       ...pre,
@@ -1061,6 +820,7 @@ const Addproduct = (props) => {
                   name="policy_desc"
                   id="policy_desc"
                   value={form.policy.description}
+                  className="w-100"
                   rows="2"
                 ></textarea>
               </div>
@@ -1083,82 +843,51 @@ const Addproduct = (props) => {
                           value={rule}
                           min={1}
                         />
-                        <button
-                          type="button"
-                          onClick={() => removeTerms_Conditions(i)}
-                        >
+                        <button onClick={() => removeTerms_Conditions(i)}>
                           delete
                         </button>
                       </span>
                     );
                   })}
-                  <button type="button" onClick={() => addTerms_Conditions()}>
-                    more
-                  </button>
+                  <button onClick={() => addTerms_Conditions()}>more</button>
                 </div>
               ) : (
-                <button type="button" onClick={() => addTerms_Conditions()}>
+                <button onClick={() => addTerms_Conditions()}>
                   would you like to add terms and conditions
                 </button>
               )}
             </div>
           </div>
-          <div style={{}}>
-            <h5>Images</h5>
-            <div className="d-flex justify-content-center">
-              <div
-                style={{ width: "fit-content", height: "fit-content" }}
-                className="ant_design_img_comp"
-              >
-                <Dragger {...img_upload_config}>
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                  <p className="ant-upload-hint">
-                    Support for a single or bulk upload.
-                  </p>
-                </Dragger>
-              </div>
-            </div>
+          {/* <select name="" className="form-control py-3 mb-3 " id="">
+            <option value="">Select Brand</option>
+          </select>
+          <select name="" className="form-control py-3 mb-3 " id="">
+            <option value="">Select Color</option>
+          </select>
+          <select name="" className="form-control py-3 mb-3 " id="">
+            <option value="">Select Category</option>
+          </select> */}
+          {/* <FormInput type="number" label="Enter Product Quantity" /> */}
+          <div>
+            <Dragger {...props}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibited from
+                uploading company data or other banned files.
+              </p>
+            </Dragger>
           </div>
-          {validation_errors.length ? (
-            <div>
-              <h5 className="text-danger">Fix these errors</h5>
-              <div>
-                {validation_errors.map((err, i) => {
-                  return (
-                    <p className="text-danger" key={i}>
-                      {i + 1} : {err}
-                    </p>
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-
-          <div className="d-flex gap-5">
-            <button
-              type="button"
-              className="d-flex gap-2 justify-content-center align-items-center"
-            >
-              <label htmlFor="draft">add as Draft</label>
-              <input
-                onChange={() =>
-                  setForm((pre) => ({ ...pre, as_draft: !pre.as_draft }))
-                }
-                checked={form.as_draft}
-                className=" "
-                type="checkbox"
-                id="draft"
-              ></input>
-            </button>
-            <button className="btn btn-success border-0  " type="submit">
-              Add Product
-            </button>
-          </div>
+          <button
+            className="btn btn-success border-0  rounded-3 my-4"
+            type="submit"
+          >
+            Add Product
+          </button>
         </form>
       </div>
     </div>

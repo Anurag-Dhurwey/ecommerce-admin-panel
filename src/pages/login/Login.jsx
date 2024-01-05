@@ -36,12 +36,12 @@ const Login = () => {
     },
   });
   useEffect(() => {
-    if (!user == null || isSuccess) {
+    if (user || isSuccess || sessionStorage.getItem('token')) {
       navigate("/admin");
     } else {
       navigate("/");
     }
-  }, [user, isSuccess, isError, isLoading]);
+  }, [user, isSuccess, isError, isLoading,navigate]);
 
   return (
     <div className="py-5" style={{ minHeight: "100vh" }}>
@@ -53,9 +53,9 @@ const Login = () => {
       <div className="upperdiv my-5 w-25  bg-white  rounded-3  mx-auto  ">
         <h3 className=" text-center title ">Login</h3>
         <p className=" text-center ">Login to your account to continue.</p>
-        <div className="error text-danger  text-center ">
-          {message.message == "Rejected" ? "you are not an Admin" : ""}
-        </div>
+        {message && (
+          <div className="error text-danger  text-center "><p>{message}</p></div>
+        )}
         <form onSubmit={formik.handleSubmit}>
           <CustomInput
             type="email"

@@ -12,6 +12,11 @@ export const catlog = [
     path: "product",
   },
   {
+    name: "Draft Products",
+    icon: <AiOutlineShoppingCart className="fs-4" />,
+    path: "draft-products",
+  },
+  {
     name: "Product List",
     icon: <AiOutlineShoppingCart className="fs-4" />,
     path: "product-list",
@@ -26,16 +31,16 @@ export const catlog = [
   //   icon: <SiBrandfolder className="fs-4" />,
   //   name: "Brand List",
   // },
-  {
-    path: "category",
-    icon: <BiCategory className="fs-4" />,
-    name: "Category",
-  },
   // {
-  //   path: "list-category",
+  //   path: "category",
   //   icon: <BiCategory className="fs-4" />,
-  //   name: "Category List",
+  //   name: "Category",
   // },
+  {
+    path: "list-category",
+    icon: <BiCategory className="fs-4" />,
+    name: "Category List",
+  },
   // {
   //   path: "color",
   //   icon: <AiOutlineBgColors className="fs-4" />,

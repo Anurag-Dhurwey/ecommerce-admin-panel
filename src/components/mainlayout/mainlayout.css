@@ -3,20 +3,36 @@
   flex-direction: column;
   justify-content: space-evenly;
 }
-@media screen and (max-width: 1200px) {
-  .MainDash {
-    justify-content: flex-start;
-    margin-top: 2rem;
+
+
+.AppGlass {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 100vh;
+  min-width: 100vw;
+  border-radius: 2rem;
+  background-color: var(--glass);
+  /* overflow: hidden; */
+  /* grid-template-columns: 13rem auto; */
+  scroll-behavior: auto;
+  /* gap: 10px; */
+  /* margin-right: 2rem;
+  padding-right: 3rem; */
+}
+
+@media screen and (max-width: 1000px) {
+  .AppGlass {
+    flex-direction: column;
   }
 }
 
-@media screen and (max-width: 768px) {
-  .MainDash {
-    align-items: center;
+@media screen and (min-width: 1000px) {
+  .side_parent {
+    min-width: 15vw;
   }
-}
-
-
-.AppGlass{
-  padding: 0px 20px;
+  .main_parent{
+    max-width: 85vw;
+    width: 85vw;
+  }
 }

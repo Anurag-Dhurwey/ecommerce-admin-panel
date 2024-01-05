@@ -7,9 +7,13 @@ const Mainlayout = () => {
     <>
       {/* <Header /> */}
       <div className="AppGlass">
-        <Sidebar />
+       <div className="side_parent">
+       <Sidebar />
+       </div>
 
-        <Outlet />
+       <div className="main_parent p-lg-1 w-100">
+       <Outlet />
+       </div>
       </div>
     </>
   );

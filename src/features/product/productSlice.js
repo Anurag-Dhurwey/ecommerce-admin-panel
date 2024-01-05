@@ -14,8 +14,26 @@ export const getproduts = createAsyncThunk(
     }
   }
 );
+
+export const getDraftProducts = createAsyncThunk(
+  "draft/DraftProducts",
+  async (thunkAPI) => {
+    try {
+      const response = await productService.getDraftProducts();
+      // if (response) {
+      return response;
+      // } else {
+      //   return thunkAPI.rejectWithValue({ message: "response did't got" });
+      // }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   products: [],
+  draftProducts: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -39,6 +57,22 @@ export const productSlice = createSlice({
         state.message = "products fetched successfully";
       })
       .addCase(getproduts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload.message;
+      })
+      .addCase(getDraftProducts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getDraftProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.draftProducts = action.payload;
+        state.message = "draft fetched successfully";
+      })
+      .addCase(getDraftProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
