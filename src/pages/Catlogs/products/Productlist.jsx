@@ -1,6 +1,9 @@
 import { Table } from "antd";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getproduts } from "../../../features/product/productSlice";
 const columns = [
   {
     title: "Sr No",
@@ -29,12 +32,18 @@ for (let i = 0; i < 46; i++) {
   });
 }
 const Productlist = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getproduts());
+  }),
+    [];
+  const productstate = useSelector((state) => state.product);
   return (
     <div
-    style={{
-      overflow:"scroll",
-      marginTop: "1rem",
-    }}
+      style={{
+        overflow: "scroll",
+        marginTop: "1rem",
+      }}
     >
       <h3 className="mb-4 title">Products</h3>
       <div>
