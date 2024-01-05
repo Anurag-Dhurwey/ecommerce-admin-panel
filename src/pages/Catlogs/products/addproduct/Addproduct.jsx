@@ -6,11 +6,13 @@ import "react-quill/dist/quill.snow.css";
 // upload image section code
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
+import axios from "axios";
 const { Dragger } = Upload;
 
-const Addproduct = () => {
+const Addproduct = (props) => {
+  const { draft_product } = props;
+  const [submitState, setSubmitState] = useState("ADD");
   const [validation_errors, setValidation_errors] = useState([]);
-
   const [form, setForm] = useState({
     title: "",
     price: "",
@@ -34,6 +36,7 @@ const Addproduct = () => {
       rules: [],
     },
     terms_and_conditions: [],
+    as_draft: false,
   });
   const [tag, setTag] = useState("");
   const config = {
@@ -91,7 +94,7 @@ const Addproduct = () => {
     if (local_price < price || !local_price) {
       setValidation_errors((pre) => [
         ...pre,
-        "local_price is not valid (local_price should be less than original price )",
+        "local_price is not valid (original price should be less than local_price )",
       ]);
       totalInvalidity += 1;
     }
@@ -147,30 +150,55 @@ const Addproduct = () => {
 
   async function onSubmitHandler(e) {
     e.preventDefault();
+    console.log("submitting");
     if (isFormValid() < 1) {
-      try {
-        const res = await fetch(`http://localhost:5000/api/product`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(form),
-        });
-        if (res.ok) {
-          const id = await res.json().then((res) => res._id);
-          message.success(`${id} uploaded`);
-        } else {
-          message.error(`duplicate slug found`);
+      if (submitState === "ADD") {
+        try {
+          const res = await axios.post(
+            `http://localhost:5000/api/product`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          if (res.data._id) {
+            message.success(`${res.data._id} uploaded`);
+          }
+          console.log(res);
+        } catch (error) {
+          console.log(error);
+          message.error(error.message);
         }
-      } catch (error) {
-        console.log(error);
-        message.error(error.message);
+      } else if (submitState === "UPDATE") {
+        try {
+          const res = await axios.put(
+            `http://localhost:5000/api/product/${draft_product._id}`,
+            form,
+            {
+              headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          console.log(res);
+          if (res.data._id) {
+            message.success(`${res.data._id} updated successfully`);
+          }
+        } catch (error) {
+          console.log(error);
+          message.error(error.message);
+        }
+      }else{
+        message.error("something went wrong");
       }
     }
   }
 
-  const props = {
+  const img_upload_config = {
     name: "images",
     multiple: true,
     async customRequest(info) {
@@ -451,8 +479,15 @@ const Addproduct = () => {
   }
 
   useEffect(() => {
-    console.log(form);
-  }, [form]);
+    if (draft_product?._id) {
+      setSubmitState("UPDATE");
+      setForm(draft_product);
+    }
+  }, [draft_product]);
+
+  useEffect(() => {
+    console.log(submitState);
+  }, [submitState]);
   return (
     <div
       style={{
@@ -470,7 +505,7 @@ const Addproduct = () => {
               <input
                 style={{ width: "95%" }}
                 name="title"
-                value={form.value}
+                value={form.title}
                 min={0}
                 onChange={(e) =>
                   setForm((pre) => ({
@@ -567,15 +602,23 @@ const Addproduct = () => {
                         type="text"
                         value={value}
                       />
-                      <button onClick={() => removeSub_desc(i)}>delete</button>
+                      <button type="button" onClick={() => removeSub_desc(i)}>
+                        delete
+                      </button>
                     </span>
                   );
                 })}
 
                 {form.description.sub_desc.length ? (
-                  <button onClick={() => addSub_desc()}>more</button>
+                  <button type="button" onClick={() => addSub_desc()}>
+                    more
+                  </button>
                 ) : (
-                  <button className="w-fit h-fit" onClick={() => addSub_desc()}>
+                  <button
+                    type="button"
+                    className="w-fit h-fit"
+                    onClick={() => addSub_desc()}
+                  >
                     would you like to describe using table
                   </button>
                 )}
@@ -607,7 +650,10 @@ const Addproduct = () => {
                             type="text"
                             value={value}
                           />
-                          <button onClick={() => removeMeta_data(i)}>
+                          <button
+                            type="button"
+                            onClick={() => removeMeta_data(i)}
+                          >
                             delete
                           </button>
                         </span>
@@ -615,12 +661,14 @@ const Addproduct = () => {
                     })}
                   </div>
                 ) : (
-                  <button onClick={() => addMeta_data()}>
+                  <button type="button" onClick={() => addMeta_data()}>
                     would you like to add meta data
                   </button>
                 )}
                 {form.meta_data.length ? (
-                  <button onClick={() => addMeta_data()}>more</button>
+                  <button type="button" onClick={() => addMeta_data()}>
+                    more
+                  </button>
                 ) : null}
               </div>
             </div>
@@ -654,6 +702,7 @@ const Addproduct = () => {
                   <span>
                     <input placeholder="category-primary" type="text" />
                     <button
+                      type="button"
                       onClick={() =>
                         setForm((pre) => ({
                           ...pre,
@@ -706,14 +755,18 @@ const Addproduct = () => {
                             />
                           </span>
 
-                          <button onClick={() => removeSize(i)}>delete</button>
+                          <button type="button" onClick={() => removeSize(i)}>
+                            delete
+                          </button>
                         </div>
                       );
                     })}
-                    <button onClick={() => addSize()}>more</button>
+                    <button type="button" onClick={() => addSize()}>
+                      more
+                    </button>
                   </div>
                 ) : (
-                  <button onClick={() => addSize()}>
+                  <button type="button" onClick={() => addSize()}>
                     would you like to add Sizes
                   </button>
                 )}
@@ -763,14 +816,18 @@ const Addproduct = () => {
                             type="text"
                             value={color}
                           /> */}
-                          <button onClick={() => removeColor(i)}>delete</button>
+                          <button type="button" onClick={() => removeColor(i)}>
+                            delete
+                          </button>
                         </div>
                       );
                     })}
-                    <button onClick={() => addColor()}>more</button>
+                    <button type="button" onClick={() => addColor()}>
+                      more
+                    </button>
                   </div>
                 ) : (
-                  <button onClick={() => addColor()}>
+                  <button type="button" onClick={() => addColor()}>
                     would you like to add colors
                   </button>
                 )}
@@ -805,6 +862,7 @@ const Addproduct = () => {
                     <p key={i}>
                       {tag}{" "}
                       <button
+                        type="button"
                         onClick={() => {
                           setForm((pre) => {
                             const copy_tags = [...pre.tags];
@@ -829,6 +887,7 @@ const Addproduct = () => {
                   onChange={(e) => setTag(e.target.value)}
                 />
                 <button
+                  type="button"
                   onClick={() => {
                     if (!tag) return;
                     setForm((pre) => ({ ...pre, tags: [tag, ...pre.tags] }));
@@ -966,18 +1025,25 @@ const Addproduct = () => {
                             value={rule}
                             min={1}
                           />
-                          <button onClick={() => removePolicy_Rule(i)}>
+                          <button
+                            type="button"
+                            onClick={() => removePolicy_Rule(i)}
+                          >
                             delete
                           </button>
                         </span>
                       );
                     })}
-                    <button className="" onClick={() => addPolicy_Rule()}>
+                    <button
+                      type="button"
+                      className=""
+                      onClick={() => addPolicy_Rule()}
+                    >
                       more
                     </button>
                   </div>
                 ) : (
-                  <button onClick={() => addPolicy_Rule()}>
+                  <button type="button" onClick={() => addPolicy_Rule()}>
                     would you like to add policy of this product
                   </button>
                 )}
@@ -1017,16 +1083,21 @@ const Addproduct = () => {
                           value={rule}
                           min={1}
                         />
-                        <button onClick={() => removeTerms_Conditions(i)}>
+                        <button
+                          type="button"
+                          onClick={() => removeTerms_Conditions(i)}
+                        >
                           delete
                         </button>
                       </span>
                     );
                   })}
-                  <button onClick={() => addTerms_Conditions()}>more</button>
+                  <button type="button" onClick={() => addTerms_Conditions()}>
+                    more
+                  </button>
                 </div>
               ) : (
-                <button onClick={() => addTerms_Conditions()}>
+                <button type="button" onClick={() => addTerms_Conditions()}>
                   would you like to add terms and conditions
                 </button>
               )}
@@ -1039,7 +1110,7 @@ const Addproduct = () => {
                 style={{ width: "fit-content", height: "fit-content" }}
                 className="ant_design_img_comp"
               >
-                <Dragger {...props}>
+                <Dragger {...img_upload_config}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
@@ -1067,12 +1138,27 @@ const Addproduct = () => {
               </div>
             </div>
           ) : null}
-          <button
-            className="btn btn-success border-0  rounded-3 my-4"
-            type="submit"
-          >
-            Add Product
-          </button>
+
+          <div className="d-flex gap-5">
+            <button
+              type="button"
+              className="d-flex gap-2 justify-content-center align-items-center"
+            >
+              <label htmlFor="draft">add as Draft</label>
+              <input
+                onChange={() =>
+                  setForm((pre) => ({ ...pre, as_draft: !pre.as_draft }))
+                }
+                checked={form.as_draft}
+                className=" "
+                type="checkbox"
+                id="draft"
+              ></input>
+            </button>
+            <button className="btn btn-success border-0  " type="submit">
+              Add Product
+            </button>
+          </div>
         </form>
       </div>
     </div>

@@ -20,6 +20,7 @@ import Addcolor from "./pages/Catlogs/colors/Addcolor";
 import AddCategory from "./pages/Catlogs/categories/AddCategory";
 import AddBrand from "./pages/Catlogs/brands/AddBrand";
 import Addproduct from "./pages/Catlogs/products/addproduct/Addproduct";
+import DraftProducts from "./pages/Catlogs/products/DraftProducts";
 // import Header from "./components/header/Header";
 
 // import Header from "./components/header/Header";
@@ -39,10 +40,10 @@ function App() {
 
             <Route path="enquiries" element={<Enquiries />} />
 
-            <Route path="blog" element={<Addblog />} />
+            {/* <Route path="blog" element={<Addblog />} />
             <Route path="blog-list" element={<Bloglist />} />
             <Route path="blog-catgeory" element={<AddblogCategory />} />
-            <Route path="blog-catgeory-list" element={<Blogcategorylist />} />
+            <Route path="blog-catgeory-list" element={<Blogcategorylist />} /> */}
 
             <Route path="orders" element={<Orders />} />
 
@@ -57,7 +58,8 @@ function App() {
             <Route path="brand" element={<AddBrand />} />
             <Route path="list-brand" element={<Brandlist />} />
 
-            <Route path="product" element={<Addproduct />} />
+            <Route path="product" element={<Addproduct  />} />
+            <Route path="draft-products" element={<DraftProducts />} />
             <Route path="product-list" element={<Productlist />} />
           </Route>
         </Routes>

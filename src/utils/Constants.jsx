@@ -12,6 +12,11 @@ export const catlog = [
     path: "product",
   },
   {
+    name: "Draft Products",
+    icon: <AiOutlineShoppingCart className="fs-4" />,
+    path: "draft-products",
+  },
+  {
     name: "Product List",
     icon: <AiOutlineShoppingCart className="fs-4" />,
     path: "product-list",

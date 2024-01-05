@@ -1,14 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import productService from "./productService";
 
-import customerService from "./customerService";
-
-export const getUsers = createAsyncThunk(
-  "customer/get-customers",
+export const getDraftProducts = createAsyncThunk(
+  "draft/DraftProducts",
   async (thunkAPI) => {
     try {
-      const response = await customerService.getUsers();
-      console.log(response);
-      return response;
+      const response = await productService.getDraftProducts();
+      if (response) {
+        return response;
+      } else {
+        return thunkAPI.rejectWithValue({ message: "response did't got" });
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -16,30 +18,30 @@ export const getUsers = createAsyncThunk(
 );
 
 const initialState = {
-  customers: [],
+  draftProducts: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
   message: "",
 };
 
-export const customerSlice = createSlice({
+export const productSlice = createSlice({
   name: "users",
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getUsers.pending, (state) => {
+      .addCase(getDraftProducts.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getUsers.fulfilled, (state, action) => {
+      .addCase(getDraftProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.customers = action.payload;
+        state.draftProducts = action.payload;
         state.message = "users fetched successfully";
       })
-      .addCase(getUsers.rejected, (state, action) => {
+      .addCase(getDraftProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
@@ -48,4 +50,4 @@ export const customerSlice = createSlice({
   },
 });
 
-export default customerSlice.reducer;
+export default productSlice.reducer;
