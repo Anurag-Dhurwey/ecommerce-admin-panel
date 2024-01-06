@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./addproduct.css";
 import "react-quill/dist/quill.snow.css";
 import { message } from "antd";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import Title from "./miniComponents/Title";
 import Price from "./miniComponents/Price";
@@ -16,8 +17,14 @@ import Policy from "./miniComponents/Policy";
 import Term_Conditions from "./miniComponents/Term_Conditions";
 import Validation_errors from "./miniComponents/Validation_errors";
 import Images from "./miniComponents/Images";
+import {
+  pushDraftProduct,
+  removeOneDraftProduct,
+  replaceOneDraftProduct,
+} from "../../../../features/draft-product/draftSlice";
 
 const Addproduct = (props) => {
+  const dispatch = useDispatch();
   const { draft_product } = props;
   const [submitState, setSubmitState] = useState("ADD");
   const [validation_errors, setValidation_errors] = useState([]);
@@ -171,6 +178,7 @@ const Addproduct = (props) => {
           );
 
           if (res.data._id) {
+            if (res.data.as_draft) dispatch(pushDraftProduct([res.data]));
             message.success(`${res.data._id} uploaded`);
           }
           console.log(res);
@@ -191,6 +199,9 @@ const Addproduct = (props) => {
           console.log(res);
           if (res.data._id) {
             message.success(`${res.data._id} updated successfully`);
+            res.data.as_draft
+              ? dispatch(replaceOneDraftProduct(res.data))
+              : dispatch(removeOneDraftProduct(res.data));
           }
         } catch (error) {
           console.log(error);

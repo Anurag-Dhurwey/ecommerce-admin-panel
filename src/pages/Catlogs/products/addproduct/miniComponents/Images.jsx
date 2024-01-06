@@ -21,27 +21,37 @@ const Images = ({ form, setForm, config }) => {
         }
       );
       const { url, asset_id } = res.data[0];
-      setForm((pre) => {
-        return {
-          ...pre,
-          images: {
-            ...pre.images,
-            primary: [res.data[0], ...pre.images.primary],
-          },
-        };
-      });
-      setFileList((pre) => {
-        pre[0] = {
-          name: file.name?file.name:asset_id,
-          asset_id,
-          status: "done",
-          thumbUrl: `${url}`,
-          url: `${url}`,
-          uid: `${asset_id}`,
-        };
-        return pre;
-      });
-      message.success(` Success : ${asset_id} file uploaded.`);
+
+      if(url && asset_id){
+        setForm((pre) => {
+          return {
+            ...pre,
+            images: {
+              ...pre.images,
+              primary: [res.data[0], ...pre.images.primary],
+            },
+          };
+        });
+        setFileList((pre) => {
+          pre[0] = {
+            name: file.name?file.name:asset_id,
+            asset_id,
+            status: "done",
+            thumbUrl: `${url}`,
+            url: `${url}`,
+            uid: `${asset_id}`,
+          };
+          return pre;
+        });
+        message.success(` Success : ${asset_id} file uploaded.`);
+      }else{
+        message.success(` did not got response from server`);
+        setFileList((pre) => {
+          pre[0] = {...pre[0], status: "error",};
+          return pre;
+        });
+      }
+      
     } catch (error) {
       setFileList((pre) => {
         pre[0] = { ...file, status: "error" };
@@ -87,7 +97,6 @@ const Images = ({ form, setForm, config }) => {
       }
     },
     async onChange(info) {
-      console.log("hi");
       const { file } = info;
       const { status } = file;
       if (status === "uploading") {
@@ -118,6 +127,7 @@ const Images = ({ form, setForm, config }) => {
     function initialFileList() {
       const draftFileList = [];
       form.images.primary?.forEach((item) => {
+        console.log(item)
         draftFileList.push({
           name: item.asset_id,
           asset_id: item.asset_id,
@@ -130,10 +140,11 @@ const Images = ({ form, setForm, config }) => {
       setFileList(draftFileList);
     }
     initialFileList();
-  }, [form]);
+  }, [form.images.primary]);
 
   useEffect(() => {
     console.log(fileList);
+    // console.log(form.images);
   }, [fileList]);
   return (
     <div className="d-flex justify-content-center">
