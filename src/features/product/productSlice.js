@@ -43,7 +43,18 @@ const initialState = {
 export const productSlice = createSlice({
   name: "product",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    replaceOneDraftProduct: (state, action) => {
+      const {draft,_id}=action.payload
+      const updatedDraft = state.draftProducts.map((product) => {
+        if (product._id === _id) {
+          return draft;
+        }
+        return product;
+      });
+      state.draftProducts = updatedDraft;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getproduts.pending, (state) => {
@@ -80,5 +91,5 @@ export const productSlice = createSlice({
       });
   },
 });
-
+export const { replaceOneDraftProduct } = productSlice.actions;
 export default productSlice.reducer;

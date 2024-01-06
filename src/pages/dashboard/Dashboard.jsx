@@ -13,7 +13,7 @@ const Dashboard = () => {
       className="MainDash"
     >
       <h2 className="">Dashboard</h2>
-      <Cards />
+      {/* <Cards /> */}
       <Table />
     </div>
   );

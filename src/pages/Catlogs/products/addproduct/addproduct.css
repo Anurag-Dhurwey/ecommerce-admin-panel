@@ -24,9 +24,14 @@
   align-items: flex-start;
   gap: 10px;
 }
-.form_row div {
+.form_row> div {
   width: 48%;
 }
+
+.form_row> div>div{
+  width: 100%;
+}
+
 .form_row div .tags_list {
   width: 100%;
   display: flex;
