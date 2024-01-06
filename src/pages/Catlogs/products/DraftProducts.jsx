@@ -108,7 +108,7 @@ const DraftProducts = () => {
           >
             back
           </button>
-          <Addproduct draft_product={draft_product} />
+          <Addproduct productToEdit={draft_product} />
         </>
       ) : (
         <>

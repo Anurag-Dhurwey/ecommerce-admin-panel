@@ -22,10 +22,15 @@ import {
   removeOneDraftProduct,
   replaceOneDraftProduct,
 } from "../../../../features/draft-product/draftSlice";
+import {
+  pushProduct,
+  removeOneProduct,
+  replaceOneProduct,
+} from "../../../../features/product/productSlice";
 
 const Addproduct = (props) => {
   const dispatch = useDispatch();
-  const { draft_product } = props;
+  const { productToEdit } = props;
   const [submitState, setSubmitState] = useState("ADD");
   const [validation_errors, setValidation_errors] = useState([]);
   const [form, setForm] = useState({
@@ -163,6 +168,24 @@ const Addproduct = (props) => {
     return totalInvalidity;
   }
 
+  function dataMutation(data) {
+    if (productToEdit.as_draft) {
+      if (data.as_draft) {
+        dispatch(replaceOneDraftProduct(data));
+      } else {
+        dispatch(removeOneDraftProduct(data));
+        dispatch(pushProduct([data]));
+      }
+    } else {
+      if (data.as_draft) {
+        dispatch(pushDraftProduct([data]));
+        dispatch(removeOneProduct(data));
+      } else {
+        dispatch(replaceOneProduct(data));
+      }
+    }
+  }
+
   async function onSubmitHandler(e) {
     e.preventDefault();
     console.log("submitting");
@@ -178,7 +201,12 @@ const Addproduct = (props) => {
           );
 
           if (res.data._id) {
-            if (res.data.as_draft) dispatch(pushDraftProduct([res.data]));
+            if(res.data.as_draft){
+              dispatch(pushDraftProduct([res.data]))
+              // dispatch(removeOneProduct(res.data))
+            }else{
+              dispatch(pushProduct([res.data]));
+            }
             message.success(`${res.data._id} uploaded`);
           }
           console.log(res);
@@ -189,19 +217,16 @@ const Addproduct = (props) => {
       } else if (submitState === "UPDATE") {
         try {
           const res = await axios.put(
-            `http://localhost:5000/api/product/${draft_product._id}`,
+            `http://localhost:5000/api/product/${productToEdit._id}`,
             form,
             {
               ...config,
             }
           );
 
-          console.log(res);
           if (res.data._id) {
+            dataMutation(res.data);
             message.success(`${res.data._id} updated successfully`);
-            res.data.as_draft
-              ? dispatch(replaceOneDraftProduct(res.data))
-              : dispatch(removeOneDraftProduct(res.data));
           }
         } catch (error) {
           console.log(error);
@@ -214,12 +239,12 @@ const Addproduct = (props) => {
   }
 
   useEffect(() => {
-    if (draft_product?._id) {
+    if (productToEdit?._id) {
       setSubmitState("UPDATE");
-      setForm(draft_product);
-      console.log(draft_product);
+      setForm(productToEdit);
+      console.log(productToEdit);
     }
-  }, [draft_product]);
+  }, [productToEdit]);
   return (
     <div
       style={{

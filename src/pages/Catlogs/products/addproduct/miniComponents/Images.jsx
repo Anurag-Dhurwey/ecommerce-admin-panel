@@ -127,7 +127,6 @@ const Images = ({ form, setForm, config }) => {
     function initialFileList() {
       const draftFileList = [];
       form.images.primary?.forEach((item) => {
-        console.log(item)
         draftFileList.push({
           name: item.asset_id,
           asset_id: item.asset_id,
@@ -143,7 +142,7 @@ const Images = ({ form, setForm, config }) => {
   }, [form.images.primary]);
 
   useEffect(() => {
-    console.log(fileList);
+    // console.log(fileList);
     // console.log(form.images);
   }, [fileList]);
   return (
