@@ -7,24 +7,7 @@ export const getproduts = createAsyncThunk(
   async (thunkAPI) => {
     try {
       const response = await productService.getProducts();
-      console.log(response);
       return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const getDraftProducts = createAsyncThunk(
-  "draft/DraftProducts",
-  async (thunkAPI) => {
-    try {
-      const response = await productService.getDraftProducts();
-      // if (response) {
-      return response;
-      // } else {
-      //   return thunkAPI.rejectWithValue({ message: "response did't got" });
-      // }
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -33,7 +16,6 @@ export const getDraftProducts = createAsyncThunk(
 
 const initialState = {
   products: [],
-  draftProducts: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -43,7 +25,27 @@ const initialState = {
 export const productSlice = createSlice({
   name: "product",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    pushProduct: (state, action) => {
+      state.products = [...action.payload, ...state.products];
+    },
+    replaceOneProduct: (state, action) => {
+      const updatedProducts = state.products.map((product) => {
+        if (product._id === action.payload._id) {
+          return action.payload;
+        }
+        return product;
+      });
+      state.products = updatedProducts;
+    },
+    removeOneProduct: (state, action) => {
+      console.log(action.payload._id)
+      const updatedProducts = state.products.filter((product) => {
+        return product._id !== action.payload._id;
+      });
+      state.products = updatedProducts;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getproduts.pending, (state) => {
@@ -53,26 +55,10 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.customers = action.payload;
+        state.products = action.payload;
         state.message = "products fetched successfully";
       })
       .addCase(getproduts.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-        state.message = action.payload.message;
-      })
-      .addCase(getDraftProducts.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getDraftProducts.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.draftProducts = action.payload;
-        state.message = "draft fetched successfully";
-      })
-      .addCase(getDraftProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
@@ -81,4 +67,6 @@ export const productSlice = createSlice({
   },
 });
 
+export const { replaceOneProduct, removeOneProduct, pushProduct } =
+  productSlice.actions;
 export default productSlice.reducer;

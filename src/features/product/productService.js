@@ -3,23 +3,16 @@ import { base_url } from "../../utils/axiosConfig";
 
 const getProducts = async () => {
  try {
-  const response = await axios.get(`${base_url}/product/`);
+  const response = await axios.get(`${base_url}product?as_draft=false`);
   return response.data;
  } catch (error) {
   throw new Error(`${error.response.data.message}`);
  }
 };
-const getDraftProducts = async () => {
-  try {
-    const response = await axios.get(`${base_url}product/draft/products`);
-    return response.data;
-  } catch (error) {
-    throw new Error(`${error.response.data.message}`);
-  }
+
+
+const draftService = {
+  getProducts
 };
 
-const productService = {
-  getProducts,getDraftProducts
-};
-
-export default productService;
+export default draftService;
