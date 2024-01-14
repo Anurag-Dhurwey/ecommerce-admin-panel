@@ -48,8 +48,10 @@ const Images = ({ form, setForm, config }) => {
         message.success(` did not got response from server`);
         setFileList((pre) => {
           pre[0] = {...pre[0], status: "error",};
+          console.log({pre});
           return pre;
         });
+
       }
       
     } catch (error) {
