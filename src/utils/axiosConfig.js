@@ -1,1 +1,1 @@
-export const base_url = "https://raiappliances-admin-panel.vercel.app/api/";
+export const base_url = "https://ecommerce-backend-seven-pi.vercel.app/api/";
