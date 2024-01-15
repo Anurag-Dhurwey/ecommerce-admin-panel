@@ -27,6 +27,7 @@ import {
   removeOneProduct,
   replaceOneProduct,
 } from "../../../../features/product/productSlice";
+import Featured_on from "./miniComponents/Featured_on";
 
 const Addproduct = (props) => {
   const dispatch = useDispatch();
@@ -56,6 +57,7 @@ const Addproduct = (props) => {
       rules: [],
     },
     terms_and_conditions: [],
+    featured_on:[],
     as_draft: false,
   });
 
@@ -68,6 +70,15 @@ const Addproduct = (props) => {
   function isFormValid() {
     let totalInvalidity = 0;
     setValidation_errors([]);
+    if (form.as_draft) {
+      if (form.title) {
+        return totalInvalidity;
+      } else {
+        setValidation_errors(["title is requred to save as draft"]);
+        totalInvalidity += 1;
+        return totalInvalidity;
+      }
+    }
     function check_array(array, error) {
       if (array.some((arr) => !arr)) {
         setValidation_errors((pre) => [...pre, `${error}`]);
@@ -201,10 +212,10 @@ const Addproduct = (props) => {
           );
 
           if (res.data._id) {
-            if(res.data.as_draft){
-              dispatch(pushDraftProduct([res.data]))
+            if (res.data.as_draft) {
+              dispatch(pushDraftProduct([res.data]));
               // dispatch(removeOneProduct(res.data))
-            }else{
+            } else {
               dispatch(pushProduct([res.data]));
             }
             message.success(`${res.data._id} uploaded`);
@@ -226,6 +237,7 @@ const Addproduct = (props) => {
 
           if (res.data._id) {
             dataMutation(res.data);
+            // console.log()
             message.success(`${res.data._id} updated successfully`);
           }
         } catch (error) {
@@ -242,9 +254,11 @@ const Addproduct = (props) => {
     if (productToEdit?._id) {
       setSubmitState("UPDATE");
       setForm(productToEdit);
-      console.log(productToEdit);
     }
   }, [productToEdit]);
+
+
+
   return (
     <div
       style={{
@@ -317,6 +331,16 @@ const Addproduct = (props) => {
             <h5>Images</h5>
             <Images form={form} setForm={setForm} config={config} />
           </div>
+          <div>
+            <h5>Ongoing Events</h5>
+            <div>
+              <h6></h6>
+            </div>
+          </div>
+          <div>
+            <h5>Featured on</h5>
+           <Featured_on form={form} setForm={setForm} />
+          </div>
           {validation_errors.length ? (
             <Validation_errors errors={validation_errors} />
           ) : null}
@@ -338,7 +362,7 @@ const Addproduct = (props) => {
               ></input>
             </button>
             <button className="btn btn-success border-0  " type="submit">
-              Add Product
+              {submitState === "ADD" ? "Add Product" : "Update Product"}
             </button>
           </div>
         </form>

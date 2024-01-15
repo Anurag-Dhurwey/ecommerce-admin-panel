@@ -5,7 +5,7 @@ import { base_url } from "../../utils/axiosConfig";
 
 const getDraftProducts = async () => {
     try {
-      const response = await axios.get(`${base_url}product/draft/products`);
+      const response = await axios.get(`${base_url}product?as_draft=true`);
       return response.data;
     } catch (error) {
       throw new Error(`${error.response.data.message}`);

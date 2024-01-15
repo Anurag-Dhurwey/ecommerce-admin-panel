@@ -36,11 +36,11 @@ export const catlog = [
   //   icon: <BiCategory className="fs-4" />,
   //   name: "Category",
   // },
-  {
-    path: "list-category",
-    icon: <BiCategory className="fs-4" />,
-    name: "Category List",
-  },
+  // {
+  //   path: "list-category",
+  //   icon: <BiCategory className="fs-4" />,
+  //   name: "Category List",
+  // },
   // {
   //   path: "color",
   //   icon: <AiOutlineBgColors className="fs-4" />,

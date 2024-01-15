@@ -30,32 +30,31 @@ const columns = [
 
 const Customers = () => {
   // feth data from api
+  const { customers, isSuccess } = useSelector((state) => state.customers);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getUsers());
-  }, []);
+    if (!isSuccess) dispatch(getUsers());
+  }, [isSuccess,dispatch]);
 
-  // get data from state
-  const customersState = useSelector((state) => state.customers.customers);
-  console.log(customersState);
+
 
   // putting data in table
   const data1 = [];
-  for (let i = 0; i < customersState.length; i++) {
-    if (customersState[i].role !== "admin")
+  for (let i = 0; i < customers.length; i++) {
+    if (customers[i].role !== "admin")
       data1.push({
         key: i + 1,
-        Firstname: customersState[i].firstname,
-        Lastname: customersState[i].lastname,
-        email: customersState[i].email,
-        mobile: customersState[i].mobile,
+        Firstname: customers[i].firstname,
+        Lastname: customers[i].lastname,
+        email: customers[i].email,
+        mobile: customers[i].mobile,
       });
   }
 
   return (
     <div
       style={{
-        overflow:"scroll",
+        overflow: "scroll",
         marginTop: "1rem",
       }}
     >
