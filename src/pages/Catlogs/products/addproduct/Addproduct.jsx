@@ -27,6 +27,7 @@ import {
   removeOneProduct,
   replaceOneProduct,
 } from "../../../../features/product/productSlice";
+import Featured_on from "./miniComponents/Featured_on";
 
 const Addproduct = (props) => {
   const dispatch = useDispatch();
@@ -56,6 +57,7 @@ const Addproduct = (props) => {
       rules: [],
     },
     terms_and_conditions: [],
+    featured_on:[],
     as_draft: false,
   });
 
@@ -252,9 +254,11 @@ const Addproduct = (props) => {
     if (productToEdit?._id) {
       setSubmitState("UPDATE");
       setForm(productToEdit);
-      // console.log(productToEdit);
     }
   }, [productToEdit]);
+
+
+
   return (
     <div
       style={{
@@ -335,10 +339,7 @@ const Addproduct = (props) => {
           </div>
           <div>
             <h5>Featured on</h5>
-            <div>
-              <h6>Special products</h6>
-              <h6>Deal of the day</h6>
-            </div>
+           <Featured_on form={form} setForm={setForm} />
           </div>
           {validation_errors.length ? (
             <Validation_errors errors={validation_errors} />
