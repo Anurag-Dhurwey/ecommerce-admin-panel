@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 import axios from "axios";
+import { base_url } from "../../../../../utils/axiosConfig";
 const Images = ({ form, setForm, config }) => {
   const { Dragger } = Upload;
   const [fileList, setFileList] = useState([]);
@@ -13,16 +14,12 @@ const Images = ({ form, setForm, config }) => {
     const formData = new FormData();
     formData.append("images", file.originFileObj);
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/upload",
-        formData,
-        {
-          ...config,
-        }
-      );
+      const res = await axios.post(`${base_url}upload`, formData, {
+        ...config,
+      });
       const { url, asset_id } = res.data[0];
 
-      if(url && asset_id){
+      if (url && asset_id) {
         setForm((pre) => {
           return {
             ...pre,
@@ -34,7 +31,7 @@ const Images = ({ form, setForm, config }) => {
         });
         setFileList((pre) => {
           pre[0] = {
-            name: file.name?file.name:asset_id,
+            name: file.name ? file.name : asset_id,
             asset_id,
             status: "done",
             thumbUrl: `${url}`,
@@ -44,24 +41,21 @@ const Images = ({ form, setForm, config }) => {
           return pre;
         });
         message.success(` Success : ${asset_id} file uploaded.`);
-      }else{
+      } else {
         message.success(` did not got response from server`);
         setFileList((pre) => {
-          pre[0] = {...pre[0], status: "error",};
-          console.log({pre});
+          pre[0] = { ...pre[0], status: "error" };
+          console.log({ pre });
           return pre;
         });
-
       }
-      
     } catch (error) {
       setFileList((pre) => {
-        pre[0] = { ...file, status: "error" };
-        return pre;
+        const copy = [...pre];
+        copy[0] = { ...file, status: "error" };
+        return copy;
       });
       message.error(` failed : ${error.message} `);
-    } finally {
-      console.log("finally");
     }
   }
 
@@ -71,26 +65,35 @@ const Images = ({ form, setForm, config }) => {
     async onRemove(file) {
       if (file?.uid) {
         try {
-          await axios.delete(
-            `http://localhost:5000/api/upload/delete-img/${file.uid}`,
-            { ...config }
-          );
-          setForm((pre) => {
-            const primary = pre?.images.primary?.filter((img) => {
-              return img.asset_id !== file.uid;
-            });
-
-            return {
-              ...pre,
-              images: {
-                ...pre.images,
-                primary,
-              },
-            };
+          await axios.delete(`${base_url}upload/delete-img/${file.uid}`, {
+            ...config,
           });
+
+          setFileList((pre) => {
+            const copy = pre?.filter((img) => {
+              return img.uid !== file.uid;
+            });
+            return copy;
+          });
+
+          if (file.status !== "error") {
+            setForm((pre) => {
+              const primary = pre?.images.primary?.filter((img) => {
+                return img.uid !== file.uid;
+              });
+
+              return {
+                ...pre,
+                images: {
+                  ...pre.images,
+                  primary,
+                },
+              };
+            });
+          }
+
           return true;
         } catch (error) {
-          console.log({ error });
           message.error(error.message);
           return false;
         }
@@ -144,7 +147,7 @@ const Images = ({ form, setForm, config }) => {
   }, [form.images.primary]);
 
   useEffect(() => {
-    // console.log(fileList);
+    console.log(fileList);
     // console.log(form.images);
   }, [fileList]);
   return (
