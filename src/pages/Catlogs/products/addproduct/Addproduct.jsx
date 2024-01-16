@@ -28,38 +28,45 @@ import {
   replaceOneProduct,
 } from "../../../../features/product/productSlice";
 import Featured_on from "./miniComponents/Featured_on";
+import { base_url } from "../../../../utils/axiosConfig";
+import Table from "./miniComponents/Table";
+
+const form_template = {
+  title: "",
+  price: "",
+  local_price: "",
+  description: {
+    head_desc: "",
+    sub_desc: [],
+  },
+  table: [
+    { head: "", rows: [""] },
+    { head: "", rows: [""] },
+  ],
+  images: { primary: [], descriptive: [] },
+  meta_data: [],
+  category: { primary: "", secondry: [], other: false },
+  sizes: [],
+  colors: [],
+  quantity: 0,
+  tags: [],
+  policy: {
+    exchange: { status: false, validity: 0 },
+    return_or_refund: { status: false, validity: 0 },
+    description: "",
+    rules: [],
+  },
+  terms_and_conditions: [],
+  featured_on: [],
+  as_draft: false,
+};
 
 const Addproduct = (props) => {
   const dispatch = useDispatch();
   const { productToEdit } = props;
   const [submitState, setSubmitState] = useState("ADD");
   const [validation_errors, setValidation_errors] = useState([]);
-  const [form, setForm] = useState({
-    title: "",
-    price: "",
-    local_price: "",
-    description: {
-      head_desc: "",
-      sub_desc: [],
-    },
-
-    images: { primary: [], descriptive: [] },
-    meta_data: [],
-    category: { primary: "", secondry: [], other: false },
-    sizes: [],
-    colors: [],
-    quantity: 0,
-    tags: [],
-    policy: {
-      exchange: { status: false, validity: 0 },
-      return_or_refund: { status: false, validity: 0 },
-      description: "",
-      rules: [],
-    },
-    terms_and_conditions: [],
-    featured_on:[],
-    as_draft: false,
-  });
+  const [form, setForm] = useState({ ...form_template });
 
   const config = {
     headers: {
@@ -203,22 +210,18 @@ const Addproduct = (props) => {
     if (isFormValid() < 1) {
       if (submitState === "ADD") {
         try {
-          const res = await axios.post(
-            `http://localhost:5000/api/product`,
-            form,
-            {
-              ...config,
-            }
-          );
+          const res = await axios.post(`${base_url}product`, form, {
+            ...config,
+          });
 
           if (res.data._id) {
             if (res.data.as_draft) {
               dispatch(pushDraftProduct([res.data]));
-              // dispatch(removeOneProduct(res.data))
             } else {
               dispatch(pushProduct([res.data]));
             }
             message.success(`${res.data._id} uploaded`);
+            setForm({ ...form_template });
           }
           console.log(res);
         } catch (error) {
@@ -228,7 +231,7 @@ const Addproduct = (props) => {
       } else if (submitState === "UPDATE") {
         try {
           const res = await axios.put(
-            `http://localhost:5000/api/product/${productToEdit._id}`,
+            `${base_url}product/${productToEdit._id}`,
             form,
             {
               ...config,
@@ -257,8 +260,6 @@ const Addproduct = (props) => {
     }
   }, [productToEdit]);
 
-
-
   return (
     <div
       style={{
@@ -283,7 +284,10 @@ const Addproduct = (props) => {
             <h5>Description</h5>
             <Description form={form} setForm={setForm} />
           </div>
-
+          <div>
+           
+            <Table form={form} setForm={setForm} />
+          </div>
           <div className="form_row">
             {/* metadata form  */}
             <div>
@@ -339,7 +343,7 @@ const Addproduct = (props) => {
           </div>
           <div>
             <h5>Featured on</h5>
-           <Featured_on form={form} setForm={setForm} />
+            <Featured_on form={form} setForm={setForm} />
           </div>
           {validation_errors.length ? (
             <Validation_errors errors={validation_errors} />
