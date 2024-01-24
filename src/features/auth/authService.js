@@ -5,11 +5,12 @@ const login = async (userdata) => {
   try {
     const response = await axios.post(`${base_url}user/admin-login`, userdata);
     if (response.data.token) {
-      // localStorage.setItem("user", JSON.stringify(response.data));
       sessionStorage.setItem("token", response.data.token);
     }
+    console.log({response})
     return response.data;
   } catch (error) {
+    console.log({error})
     throw new Error(`${error.response.data.message}`);
   }
 };

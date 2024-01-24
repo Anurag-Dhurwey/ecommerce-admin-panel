@@ -1,5 +1,18 @@
 import React from "react";
 
+const categories = [
+  // { nav: "", title: "Home" },
+  { title: "mobiles" },
+  { title: "Syringe" },
+  { title: "Ortho" },
+  { title: "Pathology machine" },
+  { title: "Pratient monitor" },
+  { title: "Cartical care" },
+  { title: "Baby" },
+  { title: "Dental care" },
+  { title: "Gauze product" },
+];
+
 const Category = ({ form, setForm }) => {
   function onCategoryChange(e) {
     const val = e.target.value;
@@ -26,19 +39,11 @@ const Category = ({ form, setForm }) => {
             id="category_primary"
             onChange={(e) => onCategoryChange(e)}
           >
-            {[
-              "select",
-              "ctr_1",
-              "ctr_2",
-              "ctr_3",
-              "ctr_1",
-              "ctr_2",
-              "ctr_3",
-              "other",
-            ].map((ctr, i) => {
+            {[{ title: "select" }, ...categories,{title:"other"}].map((ctr, i) => {
+              const {title}=ctr
               return (
-                <option key={i} value={ctr}>
-                  {ctr}
+                <option key={i} value={title}>
+                  {title}
                 </option>
               );
             })}

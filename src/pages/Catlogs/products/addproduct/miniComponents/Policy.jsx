@@ -83,7 +83,6 @@ const Policy = ({ form, setForm }) => {
         </div>
         <div style={{ alignItems: "center" }}>
           <label htmlFor="return_or_refund">
-            {" "}
             Return and Refund : check if yes{" "}
           </label>
           <input

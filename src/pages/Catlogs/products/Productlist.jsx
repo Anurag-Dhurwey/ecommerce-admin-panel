@@ -105,7 +105,7 @@ const Productlist = () => {
           >
             back
           </button>
-          <Addproduct productToEdit={selected_product} />
+          <Addproduct data={JSON.parse(JSON.stringify(selected_product))} action="UPDATE" />
         </>
       ) : (
         <>
