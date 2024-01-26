@@ -10,7 +10,7 @@ export const getOrders = createAsyncThunk(
       console.log({response})
       return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

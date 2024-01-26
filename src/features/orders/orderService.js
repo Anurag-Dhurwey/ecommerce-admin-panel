@@ -4,7 +4,6 @@ import { base_url, config } from "../../utils/axiosConfig";
 const getOrders = async () => {
  try {
     const response = await axios.get(`${base_url}user/getallorders`,config);
-
     return response.data;
  } catch (error) {
     throw new Error(error.message)

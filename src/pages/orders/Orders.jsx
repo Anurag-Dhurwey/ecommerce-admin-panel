@@ -102,7 +102,7 @@ const Orders = ({ title = "Orders" }) => {
                       {products?.map((item, j) => {
                         return (
                           <p key={j}>
-                            {"item.product"} <span> {item.count}</span>
+                            {item.product}    <span>: {item.count}</span>
                           </p>
                         );
                       })}
