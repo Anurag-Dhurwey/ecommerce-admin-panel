@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const Table = ({ form, setForm }) => {
   const [rowsWidth, setRowsWidth] = useState(
-    window.innerWidth < 750 ? window.innerWidth * 0.9 : window.innerWidth * 3.5
+    window.innerWidth < 750 ? window.innerWidth * 0.9 : window.innerWidth * 0.35
   );
 
   function addColumn() {
@@ -65,7 +65,7 @@ const Table = ({ form, setForm }) => {
       <span className="d-flex gap-2">
         <h5>Tabuler Data </h5>
         <span>
-          <button className="" onClick={() => addColumn()}>
+          <button type="button" className="" onClick={() => addColumn()}>
             new Column
           </button>
         </span>
@@ -75,7 +75,7 @@ const Table = ({ form, setForm }) => {
           const { head, rows } = item;
           return (
             <div key={i} className="table-column">
-              <button onClick={() => removeColumn(i)}>remove</button>
+              <button  type="button" onClick={() => removeColumn(i)}>remove</button>
               <input
                 placeholder="Header"
                 value={head}
@@ -95,12 +95,12 @@ const Table = ({ form, setForm }) => {
                       type="text"
                     />
                     {j !== 0 ? (
-                      <button onClick={() => removeRow(i, j)}>delete</button>
+                      <button  type="button" onClick={() => removeRow(i, j)}>delete</button>
                     ) : null}
                   </span>
                 );
               })}
-              <button onClick={() => addRows(i)}>add</button>
+              <button  type="button" onClick={() => addRows(i)}>add</button>
             </div>
           );
         })}

@@ -20,7 +20,7 @@ const Sidebar = () => {
       {/* Menu */}
 
       {/* dashboard */}
-      {/* <Link
+      <Link
         onClick={() => {
           setActive("dashboard");
         }}
@@ -33,7 +33,7 @@ const Sidebar = () => {
           <AiOutlineDashboard className="fs-4" />
           <span>Dashboard</span>
         </div>
-      </Link> */}
+      </Link>
 
       {/* customer */}
       <Link
@@ -93,7 +93,7 @@ const Sidebar = () => {
 
       {/* orders */}
 
-      {/* <Link
+      <Link
         onClick={() => {
           setActive("orders");
         }}
@@ -104,7 +104,7 @@ const Sidebar = () => {
           <FaClipboardList className="fs-4" />
           <span>Orders</span>
         </div>
-      </Link> */}
+      </Link>
 
       {/* enquiries */}
       {/* <Link

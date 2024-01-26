@@ -28,8 +28,9 @@ import {
   replaceOneProduct,
 } from "../../../../features/product/productSlice";
 import Featured_on from "./miniComponents/Featured_on";
-import { base_url } from "../../../../utils/axiosConfig";
+import { base_url, config } from "../../../../utils/axiosConfig";
 import Table from "./miniComponents/Table";
+import COD from "./miniComponents/COD";
 
 const form_template = {
   title: "",
@@ -39,10 +40,7 @@ const form_template = {
     head_desc: "",
     sub_desc: [],
   },
-  table: [
-    { head: "", rows: [""] },
-    { head: "", rows: [""] },
-  ],
+  table: [],
   images: { primary: [], descriptive: [] },
   meta_data: [],
   category: { primary: "", secondry: [], other: false },
@@ -50,6 +48,7 @@ const form_template = {
   colors: [],
   quantity: 0,
   tags: [],
+  is_cod_availabe: false,
   policy: {
     exchange: { status: false, validity: 0 },
     return_or_refund: { status: false, validity: 0 },
@@ -61,18 +60,10 @@ const form_template = {
   as_draft: false,
 };
 
-const Addproduct = (props) => {
+const Addproduct = ({ data = form_template, action = "CREATE" }) => {
   const dispatch = useDispatch();
-  const { productToEdit } = props;
-  const [submitState, setSubmitState] = useState("ADD");
   const [validation_errors, setValidation_errors] = useState([]);
-  const [form, setForm] = useState({ ...form_template });
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-    },
-  };
+  const [form, setForm] = useState({ ...data });
 
   function isFormValid() {
     let totalInvalidity = 0;
@@ -186,79 +177,64 @@ const Addproduct = (props) => {
     return totalInvalidity;
   }
 
-  function dataMutation(data) {
-    if (productToEdit.as_draft) {
-      if (data.as_draft) {
-        dispatch(replaceOneDraftProduct(data));
+  function dataMutation(updatedItem) {
+    if (data.as_draft) {
+      if (updatedItem.as_draft) {
+        dispatch(replaceOneDraftProduct(updatedItem));
       } else {
-        dispatch(removeOneDraftProduct(data));
-        dispatch(pushProduct([data]));
+        dispatch(removeOneDraftProduct(updatedItem));
+        dispatch(pushProduct([updatedItem]));
       }
     } else {
-      if (data.as_draft) {
-        dispatch(pushDraftProduct([data]));
-        dispatch(removeOneProduct(data));
+      if (updatedItem.as_draft) {
+        dispatch(pushDraftProduct([updatedItem]));
+        dispatch(removeOneProduct(updatedItem));
       } else {
-        dispatch(replaceOneProduct(data));
+        dispatch(replaceOneProduct(updatedItem));
       }
     }
   }
 
   async function onSubmitHandler(e) {
     e.preventDefault();
-    console.log("submitting");
-    if (isFormValid() < 1) {
-      if (submitState === "ADD") {
-        try {
-          const res = await axios.post(`${base_url}product`, form, {
-            ...config,
-          });
+    if (isFormValid() > 0) {
+      return;
+    }
+    if (action === "CREATE") {
+      try {
+        const res = await axios.post(`${base_url}product`, form, config);
 
-          if (res.data._id) {
-            if (res.data.as_draft) {
-              dispatch(pushDraftProduct([res.data]));
-            } else {
-              dispatch(pushProduct([res.data]));
-            }
-            message.success(`${res.data._id} uploaded`);
-            setForm({ ...form_template });
+        if (res.data._id) {
+          if (res.data.as_draft) {
+            dispatch(pushDraftProduct([res.data]));
+          } else {
+            dispatch(pushProduct([res.data]));
           }
-          console.log(res);
-        } catch (error) {
-          console.log(error);
-          message.error(error.message);
+          message.success(`${res.data._id} uploaded`);
+          setForm({ ...form_template });
         }
-      } else if (submitState === "UPDATE") {
-        try {
-          const res = await axios.put(
-            `${base_url}product/${productToEdit._id}`,
-            form,
-            {
-              ...config,
-            }
-          );
-
-          if (res.data._id) {
-            dataMutation(res.data);
-            // console.log()
-            message.success(`${res.data._id} updated successfully`);
-          }
-        } catch (error) {
-          console.log(error);
-          message.error(error.message);
-        }
-      } else {
-        message.error("something went wrong");
+      } catch (error) {
+        console.log(error);
+        message.error(error.message);
       }
+    } else if (action === "UPDATE" && form._id) {
+      try {
+        const res = await axios.put(`${base_url}product/${form._id}`, form, {
+          ...config,
+        });
+
+        if (res.data._id) {
+          dataMutation(res.data);
+          message.success(`${res.data._id} updated successfully`);
+        }
+      } catch (error) {
+        console.log(error);
+        message.error(error.message);
+      }
+    } else {
+      message.error("something went wrong");
     }
   }
-
-  useEffect(() => {
-    if (productToEdit?._id) {
-      setSubmitState("UPDATE");
-      setForm(productToEdit);
-    }
-  }, [productToEdit]);
 
   return (
     <div
@@ -285,7 +261,6 @@ const Addproduct = (props) => {
             <Description form={form} setForm={setForm} />
           </div>
           <div>
-           
             <Table form={form} setForm={setForm} />
           </div>
           <div className="form_row">
@@ -321,6 +296,12 @@ const Addproduct = (props) => {
             <div>
               <h5>Tags : </h5>
               <Tags form={form} setForm={setForm} />
+            </div>
+          </div>
+          <div className="form_row">
+            <div>
+              <h5>Cash on delevery : </h5>
+              <COD form={form} setForm={setForm} />
             </div>
           </div>
           <div className="form_product_policy">
@@ -366,7 +347,7 @@ const Addproduct = (props) => {
               ></input>
             </button>
             <button className="btn btn-success border-0  " type="submit">
-              {submitState === "ADD" ? "Add Product" : "Update Product"}
+              {action === "ADD" ? "Add Product" : "Update Product"}
             </button>
           </div>
         </form>
