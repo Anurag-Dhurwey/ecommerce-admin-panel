@@ -15,7 +15,16 @@ const Forgotpassword = () => {
           Please enter your register email to get reset password link.{" "}
         </p>
         <form>
-          <CustomInput type="email" label="Email Address" i_id="email" />
+          <CustomInput
+            i_class=""
+            name="email"
+            value={""}
+            onChange={(e) => {}}
+            onBlur={(e) => {}}
+            type="email"
+            label="Email Address"
+            i_id="email"
+          />
 
           <button
             className=" fs-5  border-0  px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none"

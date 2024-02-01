@@ -1,13 +1,10 @@
 import { Table } from "antd";
-// import { BiEdit } from "react-icons/bi";
-// import { AiFillDelete } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
-import { getDraftProducts } from "../../../features/draft-product/draftSlice";
 import { useEffect, useState } from "react";
 import Addproduct from "./addproduct/Addproduct";
 import { columnsType } from "./Productlist";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { product } from "../../../utils/types";
+import { getDraft } from "../../../features/product/productSlice";
 
 const columns = [
   {
@@ -41,8 +38,8 @@ const DraftProducts = () => {
   const [modal, setModal] = useState<{ x: number; y: number }>();
 
   const dispatch = useAppDispatch();
-  const { draftProducts, isSuccess } = useAppSelector(
-    (state) => state.draftProducts
+  const { products, isSuccess } = useAppSelector(
+    (state) => state.products.draft
   );
 
   function handleContextMenu(
@@ -62,13 +59,13 @@ const DraftProducts = () => {
   function onPublish() {}
 
   useEffect(() => {
-    !isSuccess ? dispatch(getDraftProducts()) : null;
+    !isSuccess ? dispatch(getDraft()) : null;
   }, [dispatch, isSuccess]);
 
   useEffect(() => {
     setData([]);
 
-    draftProducts.forEach((draft, i) => {
+    products.forEach((draft, i) => {
       setData((pre) => [
         ...pre,
         {
@@ -80,12 +77,12 @@ const DraftProducts = () => {
         },
       ]);
     });
-  }, [draftProducts]);
+  }, [products]);
 
   useEffect(() => {
-    const product = draftProducts.find((item) => item._id === productId);
+    const product = products.find((item) => item._id === productId);
     setDraft_product(product);
-  }, [productId, draftProducts]);
+  }, [productId, products]);
 
   useEffect(() => {
     function clickHandler() {

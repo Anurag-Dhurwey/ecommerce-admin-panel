@@ -1,12 +1,12 @@
 const CustomInput: React.FC<{
   type: string;
-  label: string;
-  i_id: string;
-  i_class: string;
+  label?: string;
+  i_id?: string;
+  i_class?: string;
   name: string;
   value: any;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
 }> = (props) => {
   const { type, label, i_id, i_class, name, value, onChange, onBlur } = props;
   return (
@@ -19,7 +19,7 @@ const CustomInput: React.FC<{
         name={name}
         value={value}
         onChange={onChange}
-        onBlur={(e) => onBlur(e)}
+        onBlur={onBlur}
       />
       <label htmlFor={i_id} className="form-label">
         {label}

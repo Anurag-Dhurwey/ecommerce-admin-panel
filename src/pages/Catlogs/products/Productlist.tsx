@@ -3,7 +3,7 @@ import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getproduts } from "../../../features/product/productSlice";
+import { getPublished } from "../../../features/product/productSlice";
 import Addproduct from "./addproduct/Addproduct";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { product } from "../../../utils/types";
@@ -46,8 +46,9 @@ const Productlist = () => {
   const [data, setData] = useState<columnsType[]>([]);
 
   const [modal, setModal] = useState<{ x: number; y: number }>();
-  const { isSuccess, products } = useAppSelector((state) => state.products);
-
+  const { isSuccess, products } = useAppSelector(
+    (state) => state.products.published
+  );
   function handleContextMenu(
     e: React.MouseEvent<any, MouseEvent>,
     record: columnsType
@@ -81,7 +82,7 @@ const Productlist = () => {
   }, [products]);
 
   useEffect(() => {
-    if (!isSuccess) dispatch(getproduts());
+    if (!isSuccess) dispatch(getPublished());
   }, [isSuccess, dispatch]);
 
   useEffect(() => {
@@ -99,7 +100,7 @@ const Productlist = () => {
       removeEventListener("click", clickHandler);
     };
   });
-
+  console.log({ products }, isSuccess);
   return (
     <div
       style={{

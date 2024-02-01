@@ -58,6 +58,7 @@ const Login = () => {
         )}
         <form onSubmit={formik.handleSubmit}>
           <CustomInput
+            i_class=""
             type="email"
             name="email"
             label="Email Address"
@@ -73,6 +74,7 @@ const Login = () => {
           </div>
 
           <CustomInput
+            i_class=""
             type="password"
             name="password"
             label="password"

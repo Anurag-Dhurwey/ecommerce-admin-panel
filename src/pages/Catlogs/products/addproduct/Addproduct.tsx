@@ -18,13 +18,8 @@ import Term_Conditions from "./miniComponents/Term_Conditions";
 import Validation_errors from "./miniComponents/Validation_errors";
 import Images from "./miniComponents/Images";
 import {
-  pushDraftProduct,
-  removeOneDraftProduct,
-  replaceOneDraftProduct,
-} from "../../../../features/draft-product/draftSlice";
-import {
-  pushProduct,
-  removeOneProduct,
+  addProduct,
+  removeProduct,
   replaceOneProduct,
 } from "../../../../features/product/productSlice";
 import Featured_on from "./miniComponents/Featured_on";
@@ -186,17 +181,17 @@ const Addproduct = ({ data = form_template, action = "CREATE" }) => {
   function dataMutation(updatedItem: product) {
     if (data.as_draft) {
       if (updatedItem.as_draft) {
-        dispatch(replaceOneDraftProduct(updatedItem));
+        dispatch(replaceOneProduct({product:updatedItem,section:"draft"}));
       } else {
-        dispatch(removeOneDraftProduct(updatedItem));
-        dispatch(pushProduct([updatedItem]));
+        dispatch(removeProduct({ids:updatedItem._id,section:"draft"}));
+        dispatch(addProduct({products:updatedItem,section:"published"}));
       }
     } else {
       if (updatedItem.as_draft) {
-        dispatch(pushDraftProduct([updatedItem]));
-        dispatch(removeOneProduct(updatedItem));
+        dispatch(addProduct({products:updatedItem,section:"draft"}));
+        dispatch(removeProduct({ids:updatedItem._id,section:"published"}));
       } else {
-        dispatch(replaceOneProduct(updatedItem));
+        dispatch(replaceOneProduct({product:updatedItem,section:"published"}));
       }
     }
   }
@@ -212,9 +207,9 @@ const Addproduct = ({ data = form_template, action = "CREATE" }) => {
 
         if (res.data._id) {
           if (res.data.as_draft) {
-            dispatch(pushDraftProduct([res.data]));
+            dispatch(addProduct({products:res.data,section:"draft"}));
           } else {
-            dispatch(pushProduct([res.data]));
+            dispatch(addProduct({products:res.data,section:"published"}));
           }
           message.success(`${res.data._id} uploaded`);
           setForm({ ...form_template });

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { base_url } from "../../utils/axiosConfig";
+import { api, base_url } from "../../utils/axiosConfig";
 
 export interface userRes {
   _id: string;
@@ -16,7 +16,7 @@ export interface loginBody{
 }
 const login = async (userdata:loginBody ): Promise<userRes> => {
   try {
-    const response = await axios.post(`${base_url}user/admin-login`, userdata);
+    const response = await axios.post(`${base_url}${api.user.loginAdmin}`, userdata);
     if (response.data.token) {
       sessionStorage.setItem("token", response.data.token);
     }else{

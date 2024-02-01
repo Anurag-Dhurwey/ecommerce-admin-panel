@@ -1,84 +1,207 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 import productService from "./productService";
 import { product } from "../../utils/types";
 
-export const getproduts = createAsyncThunk(
+export const getPublished = createAsyncThunk(
   "product/get-products",
-  async (data,thunkAPI) => {
+  async (data, thunkAPI) => {
     try {
       const response = await productService.getProducts();
       return response;
-    } catch (error:any) {
+    } catch (error: any) {
       // return thunkAPI.rejectWithValue(error.response.data);
-      throw new Error(error.message)
+      throw new Error(error.message);
+    }
+  }
+);
+export const getDraft = createAsyncThunk(
+  "draft/DraftProducts",
+  async (data, thunkAPI) => {
+    try {
+      const response = await productService.getDraftProducts();
+      return response;
+    } catch (error: any) {
+      // return thunkAPI.rejectWithValue(error.response.data);
+      throw new Error(error.message);
     }
   }
 );
 
-
-interface initialState{
-  products: product[];
-  isError: boolean;
-  isLoading: boolean;
-  isSuccess: boolean;
-  message: string;
+interface initialState {
+  published: {
+    products: product[];
+    isError?: boolean;
+    isLoading?: boolean;
+    isSuccess?: boolean;
+    message?: string;
+  };
+  draft: {
+    products: product[];
+    isError?: boolean;
+    isLoading?: boolean;
+    isSuccess?: boolean;
+    message?: string;
+  };
 }
 
-const initialState :initialState= {
-  products: [],
-  isError: false,
-  isLoading: false,
-  isSuccess: false,
-  message: "",
+const initialState: initialState = {
+  published: {
+    products: [],
+    isError: undefined,
+    isLoading: undefined,
+    isSuccess: undefined,
+    message: undefined,
+  },
+  draft: {
+    products: [],
+    isError: undefined,
+    isLoading: undefined,
+    isSuccess: undefined,
+    message: undefined,
+  },
 };
 
 export const productSlice = createSlice({
   name: "product",
   initialState: initialState,
   reducers: {
-    pushProduct: (state, action) => {
-      state.products = [...action.payload, ...state.products];
-    },
-    replaceOneProduct: (state, action) => {
-      const updatedProducts = state.products.map((product) => {
-        if (product._id === action.payload._id) {
-          return action.payload;
+    addProduct: (
+      state,
+      action: PayloadAction<{
+        products: product | product[];
+        section: "published" | "draft";
+      }>
+    ) => {
+      const { products, section } = action.payload;
+      if (Array.isArray(products)) {
+        switch (section) {
+          case "published":
+            state.published.products = [
+              ...products,
+              ...state.published.products,
+            ];
+            break;
+          case "draft":
+            state.draft.products = [...products, ...state.draft.products];
+            break;
+          default:
+            break;
         }
-        return product;
-      });
-      state.products = updatedProducts;
+      } else if (typeof products === "object") {
+        switch (section) {
+          case "published":
+            state.published.products = [products, ...state.published.products];
+            break;
+          case "draft":
+            state.draft.products = [products, ...state.draft.products];
+            break;
+
+          default:
+            break;
+        }
+      }
     },
-    removeOneProduct: (state, action) => {
-      console.log(action.payload._id)
-      const updatedProducts = state.products.filter((product) => {
-        return product._id !== action.payload._id;
-      });
-      state.products = updatedProducts;
+    replaceOneProduct: (
+      state,
+      action: PayloadAction<{
+        product: product;
+        section: "published" | "draft";
+      }>
+    ) => {
+      const { product, section } = action.payload;
+      switch (section) {
+        case "published":
+          state.published.products = state.published.products.map((item) => {
+            if (item._id === product._id) {
+              return product;
+            }
+            return item;
+          });
+          break;
+        case "draft":
+          state.draft.products = state.draft.products.map((item) => {
+            if (item._id === product._id) {
+              return product;
+            }
+            return item;
+          });
+          break;
+
+        default:
+          break;
+      }
+    },
+    removeProduct: (
+      state,
+      action: PayloadAction<{
+        ids: string | string[];
+        section: "published" | "draft";
+      }>
+    ) => {
+      const { ids, section } = action.payload;
+      switch (section) {
+        case "published":
+          state.published.products = state.published.products.filter((item) => {
+            return typeof ids === "string"
+              ? item._id !== ids
+              : !ids.includes(item._id);
+          });
+          break;
+        case "draft":
+          state.draft.products = state.draft.products.filter((item) => {
+            return typeof ids === "string"
+              ? item._id !== ids
+              : !ids.includes(item._id);
+          });
+          break;
+
+        default:
+          break;
+      }
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getproduts.pending, (state) => {
-        state.isLoading = true;
+      .addCase(getPublished.pending, (state) => {
+        state.published.isLoading = true;
       })
-      .addCase(getproduts.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.products = action.payload;
-        state.message = "products fetched successfully";
+      .addCase(getPublished.fulfilled, (state, action) => {
+        state.published.isLoading = false;
+        state.published.isSuccess = true;
+        state.published.isError = false;
+        state.published.products = action.payload;
       })
-      .addCase(getproduts.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
+      .addCase(getPublished.rejected, (state, action) => {
+        state.published.isLoading = false;
+        state.published.isSuccess = false;
+        state.published.isError = true;
         const errMsg = action.error.message;
-        state.message = errMsg ? errMsg : "something went wrong <getproduts>";
+        state.published.message = errMsg
+          ? errMsg
+          : "something went wrong <getPublished>";
+      })
+      .addCase(getDraft.pending, (state) => {
+        state.draft.isLoading = true;
+      })
+      .addCase(getDraft.fulfilled, (state, action) => {
+        state.draft.isLoading = false;
+        state.draft.isSuccess = true;
+        state.draft.isError = false;
+        state.draft.products = action.payload;
+      })
+      .addCase(getDraft.rejected, (state, action) => {
+        state.draft.isLoading = false;
+        state.draft.isSuccess = false;
+        state.draft.isError = true;
+        const errMsg = action.error.message;
+        state.draft.message = errMsg
+          ? errMsg
+          : "something went wrong <getDraft>";
       });
   },
 });
 
-export const { replaceOneProduct, removeOneProduct, pushProduct } =
+export const { replaceOneProduct, removeProduct, addProduct } =
   productSlice.actions;
 export default productSlice.reducer;
