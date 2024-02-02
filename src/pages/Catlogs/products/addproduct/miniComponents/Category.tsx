@@ -2,16 +2,14 @@ import React from "react";
 import { form_template } from "../Addproduct";
 
 const categories = [
-  // { nav: "", title: "Home" },
-  { title: "mobiles" },
-  { title: "Syringe" },
-  { title: "Ortho" },
-  { title: "Pathology machine" },
-  { title: "Pratient monitor" },
-  { title: "Cartical care" },
-  { title: "Baby" },
-  { title: "Dental care" },
-  { title: "Gauze product" },
+  "Syringe",
+  "Ortho",
+  "Pathology machine",
+  "Pratient monitor",
+  "Cartical care",
+  "Baby",
+  "Dental care",
+  "Gauze product",
 ];
 
 const Category: React.FC<{
@@ -43,16 +41,13 @@ const Category: React.FC<{
             id="category_primary"
             onChange={(e) => onCategoryChange(e)}
           >
-            {[{ title: "select" }, ...categories, { title: "other" }].map(
-              (ctr, i) => {
-                const { title } = ctr;
-                return (
-                  <option key={i} value={title}>
-                    {title}
-                  </option>
-                );
-              }
-            )}
+            {["select", ...categories, "other"].map((ctr, i) => {
+              return (
+                <option key={i} value={ctr}>
+                  {ctr}
+                </option>
+              );
+            })}
           </select>
         ) : (
           <span>

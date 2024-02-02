@@ -7,8 +7,7 @@ const Price: React.FC<{
 }> = ({ form, setForm }) => {
   return (
     <>
-      <div className="d-flex">
-        <div className="w-100">
+      <div className="d-flex gap-2 flex-wrap">
           <input
             name="price"
             value={form.price}
@@ -24,8 +23,6 @@ const Price: React.FC<{
             type="number"
             placeholder="Price"
           />
-        </div>
-        <div className="w-100">
           <input
             name="local_price"
             min={0}
@@ -41,7 +38,6 @@ const Price: React.FC<{
             type="number"
             placeholder=" Local Price"
           />
-        </div>
       </div>
     </>
   );
