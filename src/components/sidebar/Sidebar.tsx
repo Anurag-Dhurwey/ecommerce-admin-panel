@@ -10,16 +10,7 @@ const Sidebar = () => {
   const [active, setActive] = useState<string | number>("dashboard");
   return (
     <div className="Sidebar ">
-      {/* Logo */}
-      {/* <div className="logo">
-        <img src={logo} alt="logo" />
-        <span>
-          Rai <span>Appliances</span>
-        </span>
-      </div> */}
-      {/* Menu */}
-
-      {/* dashboard */}
+     
       <Link
         onClick={() => {
           setActive("dashboard");
@@ -108,7 +99,7 @@ const Sidebar = () => {
       </Link>
 
       {/* enquiries */}
-      {/* <Link
+      <Link
         onClick={() => {
           setActive("enquiries");
         }}
@@ -121,7 +112,7 @@ const Sidebar = () => {
           <FaRegQuestionCircle className="fs-4" />
           <span>Enquiries</span>
         </div>
-      </Link> */}
+      </Link>
     </div>
   );
 };

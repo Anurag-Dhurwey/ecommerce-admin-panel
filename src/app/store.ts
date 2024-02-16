@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import customerReducer from "../features/customers/customerSlice";
 import productReducer from "../features/product/productSlice";
+import enquiry from "../features/enquiry/enquirySlice";
 // import draftReducer from "../features/draft-product/draftSlice";
 import orders from "../features/orders/orderSlice";
 export const store = configureStore({
@@ -9,12 +10,11 @@ export const store = configureStore({
     auth: authReducer,
     customers: customerReducer,
     products: productReducer,
-    // draftProducts: draftReducer,
-    orders
+    enquiry,
+    orders,
   },
 });
 
-
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;

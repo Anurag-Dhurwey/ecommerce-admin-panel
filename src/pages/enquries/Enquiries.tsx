@@ -1,16 +1,20 @@
 import { Table } from "antd";
+import { useEffect, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getEnquiry } from "../../features/enquiry/enquirySlice";
+import { enquiry, user } from "../../utils/types";
 const columns = [
   {
     title: "Sr No",
     dataIndex: "key",
   },
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "Title",
+    dataIndex: "title",
   },
   {
-    title: "Product",
-    dataIndex: "product",
+    title: "Description",
+    dataIndex: "description",
   },
   {
     title: "Status",
@@ -20,21 +24,38 @@ const columns = [
 
 interface data {
   key: number;
-  name: string;
-  product: string;
-  status: string;
+  title: string;
+  description: string;
+  status: "Submitted" | "Contacted" | "In Progress" | "Resolved";
+  user?:string|user
 }
 
-const data1: data[] = [];
-for (let i = 0; i < 46; i++) {
-  data1.push({
-    key: i,
-    name: `Edward King ${i}`,
-    product: "32",
-    status: `London, Park Lane no. ${i}`,
-  });
-}
+
+
 const Enquiries = () => {
+  const { enquiry, isSuccess } = useAppSelector((state) => state.enquiry);
+const dispatch=useAppDispatch()
+const data1:data[] = []
+
+useEffect(()=>{
+enquiry?.forEach((enq,i)=>{
+  for (let i = 0; i < enquiry.length; i++) {
+    data1.push({
+      key: i,
+      title: enquiry[i].title,
+      description: enquiry[i].deacription,
+      status: enquiry[i].status,
+    });
+  }
+})
+},[enquiry])
+
+  useEffect(() => {
+    function fetchEnquiry() {
+      dispatch(getEnquiry())
+    }
+    !isSuccess && !enquiry.length && fetchEnquiry();
+  }, []);
   return (
     <div
       style={{
