@@ -28,7 +28,13 @@ const columns = [
     dataIndex: "mobile",
   },
 ];
-
+interface data {
+  key: number;
+  Firstname?: string;
+  Lastname?: string;
+  email: string;
+  mobile?: string;
+}
 const Customers = () => {
   // feth data from api
   const { customers, isSuccess } = useAppSelector((state) => state.customers);
@@ -37,13 +43,7 @@ const Customers = () => {
     if (!isSuccess) dispatch(getUsers());
   }, [isSuccess, dispatch]);
 
-  interface data {
-    key: number;
-    Firstname: string;
-    Lastname: string;
-    email: string;
-    mobile: string;
-  }
+
   // putting data in table
   const data1: data[] = [];
   for (let i = 0; i < customers.length; i++) {

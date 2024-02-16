@@ -29,10 +29,10 @@ import COD from "./miniComponents/COD";
 import { useAppDispatch } from "../../../../app/hooks";
 import { product } from "../../../../utils/types";
 
-const form_template:form_template = {
+const form_template: form_template = {
   title: "",
   price: "" as unknown as number,
-  local_price: ""as unknown as number,
+  local_price: "" as unknown as number,
   description: {
     head_desc: "",
     sub_desc: [],
@@ -57,7 +57,10 @@ const form_template:form_template = {
   as_draft: false,
 };
 
-const Addproduct = ({ data = form_template, action = "CREATE" }) => {
+const Addproduct: React.FC<{
+  data: form_template;
+  action: "CREATE" | "UPDATE";
+}> = ({ data = form_template, action = "CREATE" }) => {
   const dispatch = useAppDispatch();
   const [validation_errors, setValidation_errors] = useState<string[]>([]);
   const [form, setForm] = useState<form_template>({ ...data });
@@ -181,17 +184,19 @@ const Addproduct = ({ data = form_template, action = "CREATE" }) => {
   function dataMutation(updatedItem: product) {
     if (data.as_draft) {
       if (updatedItem.as_draft) {
-        dispatch(replaceOneProduct({product:updatedItem,section:"draft"}));
+        dispatch(replaceOneProduct({ product: updatedItem, section: "draft" }));
       } else {
-        dispatch(removeProduct({ids:updatedItem._id,section:"draft"}));
-        dispatch(addProduct({products:updatedItem,section:"published"}));
+        dispatch(removeProduct({ ids: updatedItem._id, section: "draft" }));
+        dispatch(addProduct({ products: updatedItem, section: "published" }));
       }
     } else {
       if (updatedItem.as_draft) {
-        dispatch(addProduct({products:updatedItem,section:"draft"}));
-        dispatch(removeProduct({ids:updatedItem._id,section:"published"}));
+        dispatch(addProduct({ products: updatedItem, section: "draft" }));
+        dispatch(removeProduct({ ids: updatedItem._id, section: "published" }));
       } else {
-        dispatch(replaceOneProduct({product:updatedItem,section:"published"}));
+        dispatch(
+          replaceOneProduct({ product: updatedItem, section: "published" })
+        );
       }
     }
   }
@@ -207,9 +212,9 @@ const Addproduct = ({ data = form_template, action = "CREATE" }) => {
 
         if (res.data._id) {
           if (res.data.as_draft) {
-            dispatch(addProduct({products:res.data,section:"draft"}));
+            dispatch(addProduct({ products: res.data, section: "draft" }));
           } else {
-            dispatch(addProduct({products:res.data,section:"published"}));
+            dispatch(addProduct({ products: res.data, section: "published" }));
           }
           message.success(`${res.data._id} uploaded`);
           setForm({ ...form_template });
@@ -315,7 +320,7 @@ const Addproduct = ({ data = form_template, action = "CREATE" }) => {
           </div>
           <div style={{}}>
             <h5>Images</h5>
-            <Images form={form} setForm={setForm}  />
+            <Images form={form} setForm={setForm} />
           </div>
           <div>
             <h5>Ongoing Events</h5>
@@ -332,7 +337,7 @@ const Addproduct = ({ data = form_template, action = "CREATE" }) => {
           ) : null}
 
           <div className="d-flex gap-5">
-            <button
+           {(form._id&&form.as_draft)||(!form._id)&& <button
               type="button"
               className="d-flex gap-2 justify-content-center align-items-center"
             >
@@ -346,9 +351,9 @@ const Addproduct = ({ data = form_template, action = "CREATE" }) => {
                 type="checkbox"
                 id="draft"
               ></input>
-            </button>
+            </button>}
             <button className="btn btn-success border-0  " type="submit">
-              {action === "ADD" ? "Add Product" : "Update Product"}
+              {action === "CREATE" ? "Publish" : "Update"}
             </button>
           </div>
         </form>
@@ -378,9 +383,8 @@ interface color extends addKey {
 
 type check_arrayOf_Obj = size[] | desc[] | color[];
 
-
-export interface form_template  {
-  _id?:string
+export interface form_template {
+  _id?: string;
   title: string;
   price: number;
   local_price: number;
@@ -400,7 +404,7 @@ export interface form_template  {
   category: {
     primary: string;
     secondry: string[];
-    other: boolean
+    other: boolean;
   };
   sizes: {
     qty: number;
@@ -434,4 +438,4 @@ export interface form_template  {
   terms_and_conditions: string[];
   featured_on: string[];
   as_draft: boolean;
-};
+}

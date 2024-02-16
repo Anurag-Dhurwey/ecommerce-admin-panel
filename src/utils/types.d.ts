@@ -55,15 +55,15 @@ export type product = {
   terms_and_conditions: string[];
   featured_on: string[];
   as_draft: boolean;
-  createdAt:string;
-  updatedAt:string
+  createdAt: string;
+  updatedAt: string;
 };
 export interface user {
   _id: string;
-  firstname: string;
-  lastname: string;
+  firstname?: string;
+  lastname?: string;
   email: string;
-  mobile: string;
+  mobile?: string;
   password: string;
   role: "user" | "admin";
   isBlocked: boolean;
@@ -71,8 +71,8 @@ export interface user {
   passwordChangedAt: Date;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
-  createdAt:string;
-  updatedAt:string
+  createdAt: string;
+  updatedAt: string;
 }
 export type address = {
   _id: string;
@@ -87,23 +87,23 @@ export type address = {
   zipcode: string;
   user: user | string;
   [key: string]: string;
-  createdAt:string;
-  updatedAt:string
+  createdAt: string;
+  updatedAt: string;
 };
 export type wishlist = {
   _id: string;
   product: product | string;
   user: user | string;
-  createdAt:string;
-  updatedAt:string
+  createdAt: string;
+  updatedAt: string;
 };
 export type cart = {
   _id: string;
   product: product | string;
   quantity: number;
   user: user | string;
-  createdAt:string;
-  updatedAt:string
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type order = {
@@ -122,6 +122,13 @@ export type order = {
     | "Delivered";
   address: address | string;
   user: user | string;
-  createdAt:string;
-  updatedAt:string
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type enquiry = {
+  user: user | string;
+  title: string;
+  deacription: string;
+  status: "Submitted" | "Contacted" | "In Progress" | "Resolved";
 };
