@@ -58,8 +58,8 @@ const form_template: form_template = {
 };
 
 const Addproduct: React.FC<{
-  data: form_template;
-  action: "CREATE" | "UPDATE";
+  data?: form_template;
+  action?: "CREATE" | "UPDATE";
 }> = ({ data = form_template, action = "CREATE" }) => {
   const dispatch = useAppDispatch();
   const [validation_errors, setValidation_errors] = useState<string[]>([]);
