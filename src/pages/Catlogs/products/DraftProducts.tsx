@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { useEffect, useState } from "react";
 import Addproduct from "./addproduct/Addproduct";
-import { columnsType } from "./Productlist";
+import { columnsType } from "./Published";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { product } from "../../../utils/types";
 import { getDraft } from "../../../features/product/productSlice";
@@ -10,10 +10,6 @@ const columns = [
   {
     title: "Sr No",
     dataIndex: "key",
-  },
-  {
-    title: "ID",
-    dataIndex: "id",
   },
   {
     title: "Title",

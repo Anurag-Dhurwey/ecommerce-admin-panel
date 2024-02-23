@@ -4,17 +4,15 @@ import { Link } from "react-router-dom";
 const Forgotpassword = () => {
   return (
     <div className="py-5" style={{ minHeight: "100vh" }}>
-      <br />
-      <br />
-      <br />
-      <br />
 
       <div className="my-5 w-25  bg-white  rounded-3  mx-auto upperdiv ">
         <h3 className=" text-center title"> Forgot password </h3>
         <p className=" text-center ">
           Please enter your register email to get reset password link.{" "}
         </p>
-        <form>
+        <form onSubmit={()=>{
+          alert("This is under implementation")
+        }}>
           <CustomInput
             i_class=""
             name="email"

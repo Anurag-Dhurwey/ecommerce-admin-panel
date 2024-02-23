@@ -13,7 +13,7 @@ import Customers from "./pages/customers/Customers";
 import Colorlist from "./pages/Catlogs/colors/Colorlist";
 import Categorylist from "./pages/Catlogs/categories/Categorylist";
 import Brandlist from "./pages/Catlogs/brands/Brandlist";
-import Productlist from "./pages/Catlogs/products/Productlist";
+import Productlist from "./pages/Catlogs/products/Published";
 import Addblog from "./pages/bloglist/addblog/Addblog";
 import AddblogCategory from "./pages/bloglist/addblogCategory/AddblogCategory";
 import Addcolor from "./pages/Catlogs/colors/Addcolor";
@@ -21,6 +21,7 @@ import AddCategory from "./pages/Catlogs/categories/AddCategory";
 import AddBrand from "./pages/Catlogs/brands/AddBrand";
 import Addproduct from "./pages/Catlogs/products/addproduct/Addproduct";
 import DraftProducts from "./pages/Catlogs/products/DraftProducts";
+import Product from "./pages/Catlogs/products/Product";
 // import Header from "./components/header/Header";
 
 // import Header from "./components/header/Header";
@@ -49,18 +50,19 @@ function App() {
 
             <Route path="customers" element={<Customers />} />
 
-            <Route path="color" element={<Addcolor />} />
-            <Route path="list-color" element={<Colorlist />} />
+            {/* <Route path="color" element={<Addcolor />} /> */}
+            {/* <Route path="list-color" element={<Colorlist />} /> */}
 
             <Route path="category" element={<AddCategory />} />
-            <Route path="list-category" element={<Categorylist />} />
+            {/* <Route path="list-category" element={<Categorylist />} /> */}
 
-            <Route path="brand" element={<AddBrand />} />
-            <Route path="list-brand" element={<Brandlist />} />
+            {/* <Route path="brand" element={<AddBrand />} /> */}
+            {/* <Route path="list-brand" element={<Brandlist />} /> */}
 
-            <Route path="product" element={<Addproduct  />} />
-            <Route path="draft-products" element={<DraftProducts />} />
-            <Route path="product-list" element={<Productlist />} />
+            <Route path="product" element={<Product  />} />
+            <Route path="product/create" element={<Addproduct  />} />
+            <Route path="product/draft-list" element={<DraftProducts />} />
+            <Route path="product/published-list" element={<Productlist />} />
           </Route>
         </Routes>
       </div>

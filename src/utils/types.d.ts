@@ -1,3 +1,13 @@
+export type categoryiesType =
+  | "Syringe"
+  | "Ortho"
+  | "Pathology machine"
+  | "Pratient monitor"
+  | "Cartical care"
+  | "Baby"
+  | "Dental care"
+  | "Gauze product";
+
 export type product = {
   _id: string;
   title: string;
@@ -22,7 +32,7 @@ export type product = {
     secondry: string[];
   };
   sizes: {
-    qty: number;
+    qty: Number;
     size: string;
   }[];
   brand: string;
@@ -41,22 +51,20 @@ export type product = {
     }[];
   };
   colors: {
-    qty: number;
+    qty: Number;
     color: string;
   }[];
   tags: string[];
-  is_cod_availabe: boolean;
+  is_cod_availabe: Boolean;
   policy: {
-    exchange: { status: boolean; validity: number };
-    return_or_refund: { status: boolean; validity: number };
+    exchange: { status: Boolean; validity: Number };
+    return_or_refund: { status: Boolean; validity: Number };
     description: string;
     rules: string[];
   };
   terms_and_conditions: string[];
   featured_on: string[];
-  as_draft: boolean;
-  createdAt: string;
-  updatedAt: string;
+  as_draft: Boolean;
 };
 export interface user {
   _id: string;
@@ -71,8 +79,6 @@ export interface user {
   passwordChangedAt: Date;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
-  createdAt: string;
-  updatedAt: string;
 }
 export type address = {
   _id: string;
@@ -86,24 +92,18 @@ export type address = {
   state: string;
   zipcode: string;
   user: user | string;
-  [key: string]: string;
-  createdAt: string;
-  updatedAt: string;
+  [key: string]: string|user;
 };
 export type wishlist = {
   _id: string;
   product: product | string;
   user: user | string;
-  createdAt: string;
-  updatedAt: string;
 };
 export type cart = {
   _id: string;
   product: product | string;
   quantity: number;
   user: user | string;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export type order = {
@@ -122,13 +122,4 @@ export type order = {
     | "Delivered";
   address: address | string;
   user: user | string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type enquiry = {
-  user: user | string;
-  title: string;
-  deacription: string;
-  status: "Submitted" | "Contacted" | "In Progress" | "Resolved";
 };

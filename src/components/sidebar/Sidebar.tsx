@@ -1,6 +1,6 @@
 import "./Sidebar.css";
 // import logo from "../../image/Tranparent_logo_dark.png";
-import { AiOutlineDashboard, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineDashboard, AiOutlineShoppingCart, AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { catlog, blog } from "../../utils/Constants";
 import { FaClipboardList, FaRegQuestionCircle } from "react-icons/fa";
@@ -42,9 +42,24 @@ const Sidebar = () => {
         </div>
       </Link>
 
+      <Link
+        onClick={() => {
+          setActive("product");
+        }}
+        to="product"
+        className="menu "
+      >
+        <div
+          className={active === "product" ? "menuItem active" : "menuItem"}
+        >
+          <AiOutlineShoppingCart className="fs-4" />
+          <span>Product</span>
+        </div>
+      </Link>
+
       {/* catlog */}
 
-      {catlog.map((item, index) => {
+      {/* {catlog.map((item, index) => {
         const { icon: Icon } = item;
         return (
           <Link
@@ -61,7 +76,7 @@ const Sidebar = () => {
             </div>
           </Link>
         );
-      })}
+      })} */}
 
       {/* blog */}
 

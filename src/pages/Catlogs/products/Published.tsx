@@ -13,10 +13,6 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "ID",
-    dataIndex: "id",
-  },
-  {
     title: "Title",
     dataIndex: "title",
   },
@@ -38,7 +34,7 @@ export interface columnsType {
   category: string;
 }
 
-const Productlist = () => {
+const PublishedProduct = () => {
   const dispatch = useAppDispatch();
   const [formState, setFormState] = useState(false);
   const [productId, setProductId] = useState<string>();
@@ -126,7 +122,7 @@ const Productlist = () => {
         </>
       ) : (
         <>
-          <h3 className="mb-4 title">Products</h3>
+          <h3 className="mb-4 title">Published Products</h3>
           <div>
             {modal?.x && modal.y && (
               <div
@@ -179,4 +175,4 @@ const Productlist = () => {
   );
 };
 
-export default Productlist;
+export default PublishedProduct;
