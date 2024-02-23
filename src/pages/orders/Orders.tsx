@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { getOrders } from "../../features/orders/orderSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { order, product } from "../../utils/types";
@@ -61,7 +61,7 @@ const Orders = ({ title = "Orders" }) => {
     });
   }, [orders]);
 
-  console.log(orders);
+  // console.log(orders);
 
   useEffect(() => {
     function init() {
