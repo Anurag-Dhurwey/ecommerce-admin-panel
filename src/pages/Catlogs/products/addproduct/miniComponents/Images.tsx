@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload, UploadFile } from "antd";
 import axios from "axios";
-import { api, base_url, config } from "../../../../../utils/axiosConfig";
+import { api,  config } from "../../../../../utils/axiosConfig";
 import { form_template } from "../Addproduct";
 import { UploadChangeParam } from "antd/es/upload";
 
@@ -30,7 +30,7 @@ const Images: React.FC<{
     const formData = new FormData();
     formData.append("images", file.originFileObj);
     try {
-      const res = await axios.post(`${base_url}${api.image.post}`, formData, {
+      const res = await axios.post(`${api.image.post()}`, formData, {
         ...config,
       });
       const { url, asset_id } = res.data[0];
@@ -85,7 +85,7 @@ const Images: React.FC<{
     if (file?.uid) {
       try {
         if (file.status === "done") {
-          await axios.delete(`${base_url}${api.image.delete(file.uid)}`, {
+          await axios.delete(`${api.image.delete(file.uid)}`, {
             ...config,
           });
         }
@@ -185,10 +185,17 @@ const Images: React.FC<{
           form.images.primary.map((img) => {
             return (
               <span
-              className="overflow-hidden"
+                className="overflow-hidden"
                 style={{ width: "100px", height: "100px" }}
               >
-                <img  height= "100px" width={'100px'} style={{objectFit:'cover'}} key={img.url} src={img.url} alt="products image" />
+                <img
+                  height="100px"
+                  width={"100px"}
+                  style={{ objectFit: "cover" }}
+                  key={img.url}
+                  src={img.url}
+                  alt="products image"
+                />
               </span>
             );
           })

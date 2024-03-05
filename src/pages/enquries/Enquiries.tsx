@@ -43,7 +43,7 @@ enquiry?.forEach((enq,i)=>{
     data1.push({
       key: i,
       title: enquiry[i].title,
-      description: enquiry[i].deacription,
+      description: enquiry[i].description,
       status: enquiry[i].status,
     });
   }
