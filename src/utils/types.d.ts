@@ -92,7 +92,7 @@ export type address = {
   state: string;
   zipcode: string;
   user: user | string;
-  [key: string]: string|user;
+  [key: string]: string | user;
 };
 export type wishlist = {
   _id: string;
@@ -122,4 +122,12 @@ export type order = {
     | "Delivered";
   address: address | string;
   user: user | string;
+  createdAt: string;
+};
+
+export type enquiry = {
+  user: string | user;
+  title: string;
+  description: string;
+  status: "Submitted" | "Contacted" | "In Progress" | "Resolved";
 };

@@ -4,7 +4,7 @@ import { product } from "../../utils/types";
 
 const getProducts = async (): Promise<product[]> => {
   try {
-    const response = await axios.get(`${base_url}${api.product.getAll}?as_draft=false`);
+    const response = await axios.get(`${api.product.get()}?as_draft=false`);
     return response.data as product[];
   } catch (error: any) {
     throw new Error(`${error.response.data.message}`);
@@ -14,7 +14,7 @@ const getProducts = async (): Promise<product[]> => {
 
 const getDraftProducts = async ():Promise<product[]> => {
   try {
-    const response = await axios.get(`${base_url}${api.product.getAll}?as_draft=true`);
+    const response = await axios.get(`${api.product.get()}?as_draft=true`);
     return response.data as product[];
   } catch (error:any) {
     throw new Error(`${error.response.data.message}`);

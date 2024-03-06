@@ -4,7 +4,7 @@ import { enquiry, order } from "../../utils/types";
 
 const getEnquiry = async ():Promise<enquiry[]> => {
  try {
-    const response = await axios.get(`${base_url}${api.enquiry.getAll}`,config);
+    const response = await axios.get(`${api.enquiry.getAll()}`,config);
     return response.data as enquiry[];
  } catch (error:any) {
     throw new Error(error.message)

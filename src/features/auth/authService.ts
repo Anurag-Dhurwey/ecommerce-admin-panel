@@ -16,7 +16,7 @@ export interface loginBody{
 }
 const login = async (userdata:loginBody ): Promise<userRes> => {
   try {
-    const response = await axios.post(`${base_url}${api.user.loginAdmin}`, userdata);
+    const response = await axios.post(`${api.user.loginAdmin()}`, userdata);
     if (response.data.token) {
       sessionStorage.setItem("token", response.data.token);
     }else{

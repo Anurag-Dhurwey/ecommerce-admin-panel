@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Product = () => {
   return (
     <>
-      <div className="my-4 d-flex justify-content-center align-items-center flex-wrap gap-3 col-12 ">
+      <div className="my-2 py-2 border-bottom border-4 border-primary d-flex justify-content-center align-items-center flex-wrap gap-3 col-12 ">
         {catlog.map((log) => {
           const { icon: Icon } = log;
           return (
